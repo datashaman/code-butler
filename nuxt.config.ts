@@ -1,5 +1,50 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
-  devtools: { enabled: true }
+  compatibilityDate: "2024-04-03",
+  devtools: { enabled: true },
+  modules: ["@nuxtjs/tailwindcss"],
+  tailwindcss: {
+    config: {
+      content: ["./**/*.vue"],
+      plugins: [require("daisyui")],
+      daisyui: {
+        themes: [
+          "light",
+          "dark",
+          "cupcake",
+          "bumblebee",
+          "emerald",
+          "corporate",
+          "synthwave",
+          "retro",
+          "cyberpunk",
+          "valentine",
+          "halloween",
+          "garden",
+          "forest",
+          "aqua",
+          "lofi",
+          "pastel",
+          "fantasy",
+          "wireframe",
+          "black",
+          "luxury",
+          "dracula",
+          "cmyk",
+          "autumn",
+          "business",
+          "acid",
+          "lemonade",
+          "night",
+          "coffee",
+          "winter",
+        ],
+      },
+    },
+  },
+  runtimeConfig: {
+    public: {
+      threadId: process.env.OPENAI_THREAD_ID,
+    },
+  },
 })
