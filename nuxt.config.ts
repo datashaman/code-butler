@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/tailwindcss"],
   tailwindcss: {
     config: {
-      content: ["./**/*.vue"],
+      content: ["./*.vue"],
       plugins: [require("daisyui")],
       daisyui: {
         themes: [
