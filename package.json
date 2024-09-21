@@ -19,6 +19,7 @@
   "packageManager": "yarn@4.5.0+sha512.837566d24eec14ec0f5f1411adb544e892b3454255e61fdef8fd05f3429480102806bac7446bc9daff3896b01ae4b62d00096c7e989f1596f2af10b927532f39",
   "devDependencies": {
     "daisyui": "^4.12.10",
+    "oh-vue-icons": "^1.0.0-rc3",
     "openai": "^4.62.1",
     "prettier": "^3.3.3"
   }

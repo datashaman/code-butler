@@ -5869,6 +5869,7 @@ __metadata:
     "@nuxtjs/tailwindcss": "npm:^6.12.1"
     daisyui: "npm:^4.12.10"
     nuxt: "npm:^3.13.0"
+    oh-vue-icons: "npm:^1.0.0-rc3"
     openai: "npm:^4.62.1"
     prettier: "npm:^3.3.3"
     vue: "npm:latest"
@@ -5997,6 +5998,21 @@ __metadata:
     node-fetch-native: "npm:^1.6.3"
     ufo: "npm:^1.5.3"
   checksum: 10c0/39855005c3f8aa11c11d3a3b0c4366b67d316da58633f4cf5d4a5af0a61495fd68699f355e70deda70355ead25f27b41c3bde2fdd1d24ce3f85ac79608dd8677
+  languageName: node
+  linkType: hard
+
+"oh-vue-icons@npm:^1.0.0-rc3":
+  version: 1.0.0-rc3
+  resolution: "oh-vue-icons@npm:1.0.0-rc3"
+  dependencies:
+    vue-demi: "npm:^0.12.5"
+  peerDependencies:
+    "@vue/composition-api": ^1.0.0-rc.1
+    vue: ^2.0.0 || >=3.0.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  checksum: 10c0/2a1d3d776fe02c01f8fd6afd7a2f3fe7e4c26553fa3361966c0f5aec7cd1155303f470e19181d76cdffca44c914b00f4a5927364d43572460456f3dc2f007f6c
   languageName: node
   linkType: hard
 
@@ -8351,6 +8367,22 @@ __metadata:
   dependencies:
     ufo: "npm:^1.5.3"
   checksum: 10c0/a3c4b73b4ac0e919632543b6daad6067c2aed03a5805f72730f0c1a52a40f80d122dfa33383c1c466f69df77b5565b52704409efb42e4244243a241ab0392bef
+  languageName: node
+  linkType: hard
+
+"vue-demi@npm:^0.12.5":
+  version: 0.12.5
+  resolution: "vue-demi@npm:0.12.5"
+  peerDependencies:
+    "@vue/composition-api": ^1.0.0-rc.1
+    vue: ^3.0.0-0 || ^2.6.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  bin:
+    vue-demi-fix: bin/vue-demi-fix.js
+    vue-demi-switch: bin/vue-demi-switch.js
+  checksum: 10c0/7c10377bf74e3ec81c5b5db91b6b4781b78df831f2e66fefa2aabf6da01d3ee08444f4aa4ec0dcf5cd345cdc6c09343558cb0aceb3f0716dba709a53eed745d1
   languageName: node
   linkType: hard
 
