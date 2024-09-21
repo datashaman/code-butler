@@ -9,11 +9,9 @@ const getFile = ({ path }) => {
   return file
 }
 
-export const useTools = async () => {
-  const BASE_FOLDER = await fs.realpath("components")
-
+export const useTools = async (project) => {
   const normalizePath = (path) => {
-    return join(BASE_FOLDER, path)
+    return join(project.path, path)
   }
 
   const functions = {
@@ -23,40 +21,75 @@ export const useTools = async () => {
       }
     },
     saveFile: async ({ path, contents }) => {
-      await fs.writeFile(normalizePath(path), contents)
+      try {
+        await fs.writeFile(normalizePath(path), contents)
 
-      return {
-        success: true,
+        return {
+          success: true,
+        }
+      } catch (e) {
+        return {
+          success: false,
+          error: e.message,
+        }
       }
     },
     listFiles: async () => {
-      const files = await fs.readdir(BASE_FOLDER)
+      try {
+        const files = await fs.readdir(project.path)
 
-      return {
-        success: true,
-        files,
+        return {
+          success: true,
+          files,
+        }
+      } catch (e) {
+        return {
+          success: false,
+          error: e.message,
+        }
       }
     },
     moveFile: async ({ from, to }) => {
-      await fs.rename(normalizePath(from), normalizePath(to))
+      try {
+        await fs.rename(normalizePath(from), normalizePath(to))
 
-      return {
-        success: true,
+        return {
+          success: true,
+        }
+      } catch (e) {
+        return {
+          success: false,
+          error: e.message,
+        }
       }
     },
     removeFile: async ({ path }) => {
-      await fs.unlink(normalizePath(path))
+      try {
+        await fs.unlink(normalizePath(path))
 
-      return {
-        success: true,
+        return {
+          success: true,
+        }
+      } catch (e) {
+        return {
+          success: false,
+          error: e.message,
+        }
       }
     },
     getFileContents: async ({ path }) => {
-      const contents = fs.readFile(normalizePath(path), "utf-8")
+      try {
+        const contents = await fs.readFile(normalizePath(path), "utf-8")
 
-      return {
-        success: true,
-        contents,
+        return {
+          success: true,
+          contents,
+        }
+      } catch (e) {
+        return {
+          success: false,
+          error: e.message,
+        }
       }
     },
   }

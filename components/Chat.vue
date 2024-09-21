@@ -42,7 +42,7 @@ const handleSendMessage = async (evt) => {
   const content = newMessage.value + ""
   newMessage.value = ""
 
-  await sendMessage(activeProject.value.threadId, content, activeModel.value)
+  await sendMessage(activeProject.value, content, activeModel.value)
 }
 
 const newProject = async () => {
@@ -83,6 +83,7 @@ const updateProject = async () => {
         method: "PUT",
         body: JSON.stringify({
           name: activeProject.value.name,
+          path: activeProject.value.path,
           description: activeProject.value.description,
         }),
       },
@@ -224,9 +225,12 @@ onMounted(async () => {
           <label class="label">
             <span class="label-text">Path</span>
           </label>
-          <span class="text-xs text-neutral ml-1">{{
-            activeProject.path
-          }}</span>
+          <input
+            v-model="activeProject.path"
+            type="text"
+            class="input"
+            placeholder="Project Path"
+          />
         </div>
 
         <div class="form-control w-full">
@@ -316,7 +320,7 @@ onMounted(async () => {
         </template>
       </div>
 
-      <div class="w-1/2 mx-auto">
+      <div class="w-2/3 mx-auto">
         <div class="flex flex-row p-4 gap-2 w-full">
           <div class="flex-grow">
             <textarea

@@ -35,7 +35,7 @@ export function useChat() {
     }
   }
 
-  const sendMessage = async (threadId, content: string, model: string) => {
+  const sendMessage = async (project, content: string, model: string) => {
     isLoading.value = true
     error.value = null
 
@@ -89,7 +89,7 @@ export function useChat() {
         tools: ["getCurrentTime"],
       }
 
-      const response = await $fetch(`/api/threads/${threadId}/runs`, params)
+      const response = await $fetch(`/api/projects/${project.id}`, params)
       const reader = response.pipeThrough(new TextDecoderStream()).getReader()
 
       while (true) {

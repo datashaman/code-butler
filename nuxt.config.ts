@@ -10,10 +10,4 @@ export default defineNuxtConfig({
       threadId: process.env.OPENAI_THREAD_ID,
     },
   },
-  server: {
-    https: {
-        key: fs.readFileSync(path.resolve(__dirname, "certs", "localhost-key.pem")),
-        cert: fs.readFileSync(path.resolve(__dirname, "certs", "localhost.pem")),
-    },
-  },
 })

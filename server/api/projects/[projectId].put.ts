@@ -8,6 +8,7 @@ export default eventHandler(async (event) => {
 
   const values = await useValidatedBody(event, {
     name: z.string().min(1).max(255),
+    path: z.string().min(1).max(255),
     description: z.string().max(1000),
   })
 

@@ -1,8 +1,20 @@
 import OpenAI from "openai"
 import { useTools } from "@/composables/useTools"
+import { useValidatedParams, z, zh } from "h3-zod"
 
 export default defineEventHandler(async (event) => {
-  const tools = await useTools()
+  const { projectId } = await useValidatedParams(event, {
+    projectId: zh.intAsString,
+  })
+
+  const project = useDB()
+    .select()
+    .from(tables.projects)
+    .where(eq(tables.projects.id, projectId))
+    .limit(1)
+    .get()
+
+  const tools = await useTools(project)
   const openai = new OpenAI()
 
   const observeRunStream = async (stream, controller) => {
@@ -46,14 +58,11 @@ export default defineEventHandler(async (event) => {
 
   const stream = new ReadableStream({
     async start(controller) {
-      const stream = openai.beta.threads.runs.stream(
-        getRouterParam(event, "threadId"),
-        {
-          ...(await readBody(event)),
-          assistant_id: process.env.OPENAI_ASSISTANT_ID,
-          tools: tools.allTools(),
-        },
-      )
+      const stream = openai.beta.threads.runs.stream(project.threadId, {
+        ...(await readBody(event)),
+        assistant_id: process.env.OPENAI_ASSISTANT_ID,
+        tools: tools.allTools(),
+      })
 
       observeRunStream(stream, controller)
     },
