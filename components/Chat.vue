@@ -24,20 +24,17 @@ onMounted(async () => {
 </script>
 <template>
   <div class="flex flex-col bg-base-100 h-screen">
-    <div class="navbar text-neutral z-10">
+    <div class="navbar text-neutral z-10 text-lg">
       <div class="navbar-start">
         <ul class="menu menu-horizontal px-1">
           <li>
             <details>
-              <summary>Projects</summary>
+              <summary>gpt-4o</summary>
               <ul class="bg-base-100 rounded-t-none min-w-40">
-                <li><a>Create Project</a></li>
-                <li>
-                  <h2 class="menu-title">Projects</h2>
-                </li>
-                <li><a>Project 1</a></li>
-                <li><a>Project 2</a></li>
-                <li><a>Project 3</a></li>
+                <li><h2 class="menu-title">Model</h2></li>
+                <li><a class="active">gpt-4o</a></li>
+                <li><a>o1-preview</a></li>
+                <li><a>o1-mini</a></li>
               </ul>
             </details>
           </li>
