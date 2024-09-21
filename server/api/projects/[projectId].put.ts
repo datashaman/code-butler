@@ -6,7 +6,10 @@ export default eventHandler(async (event) => {
     projectId: zh.intAsString,
   })
 
-  const values = await useValidatedBody(event, {})
+  const values = await useValidatedBody(event, {
+    name: z.string().min(1).max(255),
+    description: z.string().max(1000),
+  })
 
   const project = useDB()
     .update(tables.projects)

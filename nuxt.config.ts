@@ -1,4 +1,6 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import fs from "fs"
+import path from "path"
+
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
@@ -6,6 +8,12 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       threadId: process.env.OPENAI_THREAD_ID,
+    },
+  },
+  server: {
+    https: {
+        key: fs.readFileSync(path.resolve(__dirname, "certs", "localhost-key.pem")),
+        cert: fs.readFileSync(path.resolve(__dirname, "certs", "localhost.pem")),
     },
   },
 })

@@ -12,8 +12,6 @@ export function useChat() {
     ((message: { role: string; content: string }) => void)[]
   > = ref([])
 
-  const threadId = runtimeConfig.public.threadId
-
   watch(
     messages,
     (newMessages) => {
@@ -37,7 +35,7 @@ export function useChat() {
     }
   }
 
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (threadId, content: string, model: string) => {
     isLoading.value = true
     error.value = null
 
@@ -85,6 +83,7 @@ export function useChat() {
               content,
             },
           ],
+          model,
         }),
         responseType: "stream",
         tools: ["getCurrentTime"],
@@ -127,7 +126,7 @@ export function useChat() {
     }
   }
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (threadId) => {
     let url = `/api/threads/${threadId}/messages`
 
     isLoading.value = true
