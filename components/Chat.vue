@@ -23,8 +23,8 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div class="flex flex-col h-screen">
-    <div ref="messagesContainer" class="flex-1 overflow-y-auto">
+  <div class="flex flex-col bg-neutral-content h-screen">
+    <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4">
       <template v-for="message in messages" :key="message.id">
         <div v-if="message.role === 'assistant'" class="chat chat-start">
           <div class="chat-bubble chat-bubble-secondary">
@@ -39,7 +39,7 @@ onMounted(async () => {
       </template>
     </div>
 
-    <div class="w-full bg-base-300">
+    <div class="w-full bg-base-200">
       <div class="flex flex-row p-4 gap-2 w-full">
         <div class="flex-grow">
           <textarea

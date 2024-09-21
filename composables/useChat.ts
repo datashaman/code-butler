@@ -2,7 +2,6 @@ import { ref, watch, type Ref } from "vue"
 
 export function useChat() {
   const runtimeConfig = useRuntimeConfig()
-  console.log(runtimeConfig)
   const messages = ref<{ role: string; content: string }[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
@@ -14,7 +13,6 @@ export function useChat() {
   > = ref([])
 
   const threadId = runtimeConfig.public.threadId
-  console.log(threadId)
 
   watch(
     messages,
