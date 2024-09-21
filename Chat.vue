@@ -23,11 +23,8 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div class="h-screen">
-    <div
-      ref="messagesContainer"
-      class="flex-grow overflow-y-auto p-2 bg-secondary-content"
-    >
+  <div class="flex flex-col h-screen">
+    <div ref="messagesContainer" class="flex-1 overflow-y-auto">
       <template v-for="message in messages" :key="message.id">
         <div v-if="message.role === 'assistant'" class="chat chat-start">
           <div class="chat-bubble chat-bubble-secondary">
@@ -43,17 +40,17 @@ onMounted(async () => {
     </div>
 
     <div class="w-full bg-base-300">
-      <div class="flex p-2 gap-2 w-full">
+      <div class="flex flex-row p-4 gap-2 w-full">
         <div class="flex-grow">
-          <input
+          <textarea
             v-model="newMessage"
             type="text"
-            class="input input-bordered input-sm w-full"
+            class="textarea textarea-bordered w-full"
             placeholder="Type your message here..."
             @keyup.enter="handleSendMessage"
           />
         </div>
-        <button class="ml-2 btn btn-primary btn-sm" @click="handleSendMessage">
+        <button class="ml-2 btn btn-primary" @click="handleSendMessage">
           Send
         </button>
       </div>
