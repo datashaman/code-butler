@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1726900672837,
+      "tag": "0000_legal_loki",
+      "breakpoints": true
+    }
+  ]
+}
