@@ -13,14 +13,15 @@ const sidebarOpen = ref(false)
 
 const handleSendMessage = async () => {
   if (!newMessage.value) return
-
-  await sendMessage(newMessage.value)
+  const content = newMessage.value + ""
   newMessage.value = ""
-  scrollToBottom()
+
+  await sendMessage(content)
 }
 
 onMounted(async () => {
   await fetchMessages()
+  scrollToBottom()
 })
 </script>
 <template>
@@ -103,7 +104,13 @@ onMounted(async () => {
               @keyup.enter="handleSendMessage"
             />
           </div>
-          <button class="ml-2 btn" @click="handleSendMessage">Send</button>
+          <button class="btn-circle ml-2" @click="handleSendMessage">
+            <v-icon
+              scale="3"
+              name="bi-arrow-up-circle-fill"
+              class="text-base-300"
+            />
+          </button>
         </div>
       </div>
     </div>
