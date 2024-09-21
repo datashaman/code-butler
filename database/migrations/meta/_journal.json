@@ -8,6 +8,13 @@
       "when": 1726900672837,
       "tag": "0000_legal_loki",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1726902205411,
+      "tag": "0001_tired_valkyrie",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,19 @@
 <script setup lang="ts">
+import { marked } from "marked"
+import markedLinkifyIt from "marked-linkify-it"
+import DOMPurify from "dompurify"
+
+marked
+  .use({
+    breaks: true,
+  })
+  .use(markedLinkifyIt())
+
+const renderMarkdown = (content) => {
+  const html = marked.parseInline(content)
+  return DOMPurify.sanitize(html)
+}
+
 const {
   messagesContainer,
   messages,
@@ -10,9 +25,12 @@ const {
 
 const newMessage = ref("")
 const sidebarOpen = ref(false)
+const projects = ref([])
 
-const handleSendMessage = async () => {
+const handleSendMessage = async (evt) => {
+  if (evt.shiftKey) return
   if (!newMessage.value) return
+  evt.preventDefault()
   const content = newMessage.value + ""
   newMessage.value = ""
 
@@ -22,6 +40,9 @@ const handleSendMessage = async () => {
 onMounted(async () => {
   await fetchMessages()
   scrollToBottom()
+
+  const { projects: data } = await $fetch("/api/projects")
+  projects.value = data
 })
 </script>
 <template>
@@ -30,11 +51,9 @@ onMounted(async () => {
       <ul class="menu">
         <li><a>New Project</a></li>
         <li><h2 class="menu-title">Projects</h2></li>
-        <li><a class="active">Project 1</a></li>
-        <li><a class="">Project 2</a></li>
-      </ul>
-      <ul class="menu">
-        <li><a>Settings</a></li>
+        <li v-for="project in projects" :key="project.id">
+          <a class="active">{{ project.name }}</a>
+        </li>
       </ul>
     </div>
     <div class="flex-1 flex flex-col bg-base-100 h-screen">
@@ -80,14 +99,15 @@ onMounted(async () => {
                 v-if="message.content[0].text.value === '...'"
                 class="loading loading-dots"
               />
-              <span v-else>
-                {{ message.content[0].text.value }}
-              </span>
+              <span
+                v-else
+                v-html="renderMarkdown(message.content[0].text.value)"
+              />
             </div>
           </div>
           <div v-else class="chat chat-end">
             <div class="chat-bubble bg-base-200 text-black">
-              {{ message.content[0].text.value }}
+              <span v-html="renderMarkdown(message.content[0].text.value)" />
             </div>
           </div>
         </template>
@@ -101,12 +121,13 @@ onMounted(async () => {
               type="text"
               class="textarea bg-base-200 w-full"
               placeholder="Type your message here..."
+              rows="1"
               @keyup.enter="handleSendMessage"
             />
           </div>
           <button class="btn-circle ml-2" @click="handleSendMessage">
             <v-icon
-              scale="3"
+              scale="2"
               name="bi-arrow-up-circle-fill"
               class="text-base-300"
             />
