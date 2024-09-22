@@ -1528,7 +1528,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxt/kit@npm:3.13.2, @nuxt/kit@npm:^3.12.3, @nuxt/kit@npm:^3.13.1, @nuxt/kit@npm:^3.8.1":
+"@nuxt/kit@npm:3.13.2, @nuxt/kit@npm:^3.12.3, @nuxt/kit@npm:^3.12.4, @nuxt/kit@npm:^3.13.1, @nuxt/kit@npm:^3.8.1, @nuxt/kit@npm:^3.9.0":
   version: 3.13.2
   resolution: "@nuxt/kit@npm:3.13.2"
   dependencies:
@@ -1809,6 +1809,16 @@ __metadata:
     "@parcel/watcher-win32-x64":
       optional: true
   checksum: 10c0/33b7112094b9eb46c234d824953967435b628d3d93a0553255e9910829b84cab3da870153c3a870c31db186dc58f3b2db81382fcaee3451438aeec4d786a6211
+  languageName: node
+  linkType: hard
+
+"@pinia/nuxt@npm:^0.5.4":
+  version: 0.5.4
+  resolution: "@pinia/nuxt@npm:0.5.4"
+  dependencies:
+    "@nuxt/kit": "npm:^3.9.0"
+    pinia: "npm:^2.2.2"
+  checksum: 10c0/c6aee28d7383f023eda38553e5f6e31ee0352a2bc71944c6e2956e0d983458ff4c374f6bcaa99c87a144fb4296e9d952662dd7f7ebbdd9df90f3a28efad98697
   languageName: node
   linkType: hard
 
@@ -2402,7 +2412,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/devtools-api@npm:^6.6.4":
+"@vue/devtools-api@npm:^6.6.3, @vue/devtools-api@npm:^6.6.4":
   version: 6.6.4
   resolution: "@vue/devtools-api@npm:6.6.4"
   checksum: 10c0/0a993ae23618166e1bee5a7c14cebd8312752b93c143cbdd48fb2d0f7ade070d0e6baf757cd920d4681fef8f9acf29515162160f38cc7410f9a684d2df21b6de
@@ -6920,6 +6930,7 @@ __metadata:
   resolution: "nuxt-app@workspace:."
   dependencies:
     "@nuxtjs/tailwindcss": "npm:^6.12.1"
+    "@pinia/nuxt": "npm:^0.5.4"
     "@types/better-sqlite3": "npm:^7.6.11"
     "@vueform/nuxt": "npm:^1.7.0"
     better-sqlite3: "npm:^11.3.0"
@@ -6931,6 +6942,7 @@ __metadata:
     marked: "npm:^14.1.2"
     marked-linkify-it: "npm:^3.1.11"
     nuxt: "npm:^3.13.0"
+    nuxt-snackbar: "npm:^1.1.2"
     oh-vue-icons: "npm:^1.0.0-rc3"
     openai: "npm:^4.62.1"
     prettier: "npm:^3.3.3"
@@ -6939,6 +6951,17 @@ __metadata:
     zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
+
+"nuxt-snackbar@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "nuxt-snackbar@npm:1.1.2"
+  dependencies:
+    "@nuxt/kit": "npm:^3.12.4"
+    defu: "npm:^6.1.4"
+    vue3-snackbar: "npm:^2.3.2"
+  checksum: 10c0/f91d1cc6a3d0da2002c09c30c834fb5b166448fc6613fdda8b0ce7d719b8d1ee03dcd09eb8cbed9afe744928597fd061e24cc763e5e3162de16cc8f89735c5f9
+  languageName: node
+  linkType: hard
 
 "nuxt@npm:^3.13.0":
   version: 3.13.2
@@ -7356,6 +7379,25 @@ __metadata:
   version: 2.3.0
   resolution: "pify@npm:2.3.0"
   checksum: 10c0/551ff8ab830b1052633f59cb8adc9ae8407a436e06b4a9718bcb27dc5844b83d535c3a8512b388b6062af65a98c49bdc0dd523d8b2617b188f7c8fee457158dc
+  languageName: node
+  linkType: hard
+
+"pinia@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "pinia@npm:2.2.2"
+  dependencies:
+    "@vue/devtools-api": "npm:^6.6.3"
+    vue-demi: "npm:^0.14.10"
+  peerDependencies:
+    "@vue/composition-api": ^1.4.0
+    typescript: ">=4.4.4"
+    vue: ^2.6.14 || ^3.3.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    typescript:
+      optional: true
+  checksum: 10c0/6c30a6e355be294f87a0256d4b2c266d3315d4fc1451c0a17847d03c0e7879faab4d58df2496e0c2b34a54743807bf65b27f8e80e400883d8bb46682f7af3b5f
   languageName: node
   linkType: hard
 
@@ -8977,6 +9019,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tiny-emitter@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "tiny-emitter@npm:2.1.0"
+  checksum: 10c0/459c0bd6e636e80909898220eb390e1cba2b15c430b7b06cec6ac29d87acd29ef618b9b32532283af749f5d37af3534d0e3bde29fdf6bcefbf122784333c953d
+  languageName: node
+  linkType: hard
+
 "tiny-invariant@npm:^1.1.0":
   version: 1.3.3
   resolution: "tiny-invariant@npm:1.3.3"
@@ -9693,6 +9742,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vue-demi@npm:^0.14.10":
+  version: 0.14.10
+  resolution: "vue-demi@npm:0.14.10"
+  peerDependencies:
+    "@vue/composition-api": ^1.0.0-rc.1
+    vue: ^3.0.0-0 || ^2.6.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  bin:
+    vue-demi-fix: bin/vue-demi-fix.js
+    vue-demi-switch: bin/vue-demi-switch.js
+  checksum: 10c0/a9ed8712fa36d01bc13c39757f95f30cebf42d557b99e94bff86d8660c81f2911b41220f7affc023d1ffcc19e13999e4a83019991e264787cca2c616e83aea48
+  languageName: node
+  linkType: hard
+
 "vue-devtools-stub@npm:^0.1.0":
   version: 0.1.0
   resolution: "vue-devtools-stub@npm:0.1.0"
@@ -9708,6 +9773,25 @@ __metadata:
   peerDependencies:
     vue: ^3.2.0
   checksum: 10c0/97764fa57f3338559645e6b86c5001b313bacd753bcacf01ca17770d78794fa564d9c9bd24e9b99104e31d7e484d7c30844099300ec923e0c05d45e27111c0e7
+  languageName: node
+  linkType: hard
+
+"vue3-icon@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "vue3-icon@npm:2.1.0"
+  checksum: 10c0/ca989d9f65d950c42edb1e7b38121857e55de851e807ade5b9341f8c10431959f4e313b50636713d571862303965ec4fa203c3d0b170fe07b7594bda5d003830
+  languageName: node
+  linkType: hard
+
+"vue3-snackbar@npm:^2.3.2":
+  version: 2.3.4
+  resolution: "vue3-snackbar@npm:2.3.4"
+  dependencies:
+    tiny-emitter: "npm:^2.1.0"
+    vue3-icon: "npm:^2.1.0"
+  peerDependencies:
+    vue: ^3.0.0
+  checksum: 10c0/d274a7d2ebec955c60e0ab5ef0047a57caaa1868d8cb53e5a87c8a7b452376227469a2f130eae380b36518a987b5f6885715c98b73553e1c3ed11b035bac6ece
   languageName: node
   linkType: hard
 

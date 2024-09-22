@@ -82,6 +82,7 @@ onMounted(async () => {
   <div class="flex-1 flex flex-col bg-base-100 h-screen">
     <div class="navbar text-neutral z-10">
       <div class="navbar-start">
+        <h2 class="font-bold text-xl pl-8">{{ project.name }}</h2>
         <ul class="menu menu-horizontal px-1">
           <li>
             <details ref="modelDetails">

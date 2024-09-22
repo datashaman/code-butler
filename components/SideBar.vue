@@ -1,7 +1,7 @@
 <script setup>
-const assistants = ref([])
-const projects = ref([])
-const assistantModal = ref(null)
+const assistantStore = useAssistantStore()
+const projectStore = useProjectStore()
+
 const open = ref(false)
 
 watch(
@@ -19,11 +19,8 @@ onMounted(async () => {
     open.value = JSON.parse(openValue)
   }
 
-  const { assistants: assistantData } = await $fetch("/api/assistants")
-  assistants.value = assistantData
-
-  const { projects: projectData } = await $fetch("/api/projects")
-  projects.value = projectData
+  await assistantStore.fetchAssistants()
+  await projectStore.fetchProjects()
 })
 </script>
 <template>
@@ -35,7 +32,7 @@ onMounted(async () => {
           <h2>Assistants</h2>
         </nuxt-link>
       </li>
-      <li v-for="assistant in assistants" :key="assistant.id">
+      <li v-for="assistant in assistantStore.assistants" :key="assistant.id">
         <nuxt-link :to="`/assistants/${assistant.id}/edit`">
           <v-icon name="bi-pencil-square" />
           {{ assistant.name }}
@@ -50,7 +47,7 @@ onMounted(async () => {
           <h2>Projects</h2>
         </nuxt-link>
       </li>
-      <li v-for="project in projects" :key="project.id">
+      <li v-for="project in projectStore.projects" :key="project.id">
         <nuxt-link :to="`/projects/${project.id}`">
           <nuxt-link :to="`/projects/${project.id}/edit`">
             <v-icon name="bi-pencil-square" />
