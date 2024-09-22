@@ -32,7 +32,7 @@ const {
 
 const project = ref(null)
 const newMessage = ref("")
-const activeModel = ref(null)
+const activeModel = ref("")
 const models = ref([])
 
 const { data: modelsData } = await useFetch("/api/models")
@@ -87,11 +87,21 @@ onMounted(async () => {
           <li>
             <details ref="modelDetails">
               <summary>
-                <span v-if="activeModel">{{ activeModel }}</span>
-                <span v-else>Model</span>
+                {{ activeModel }}
               </summary>
               <ul class="bg-base-100 rounded-t-none min-w-60">
                 <li><h2 class="menu-title">Model</h2></li>
+                <li>
+                  <a
+                    :class="{ active: !activeModel }"
+                    @click="
+                      (activeModel = null),
+                        $refs.modelDetails.removeAttribute('open')
+                    "
+                  >
+                    assistant
+                  </a>
+                </li>
                 <li v-for="model in models" :key="model.id">
                   <a
                     :class="{ active: activeModel && activeModel === model }"

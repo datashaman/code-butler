@@ -74,17 +74,22 @@ export function useChat() {
     })
 
     try {
+      const body = {
+        additional_messages: [
+          {
+            role: "user",
+            content,
+          },
+        ],
+      }
+
+      if (model !== "assistant") {
+        body.model = model
+      }
+
       const params = {
         method: "POST",
-        body: JSON.stringify({
-          additional_messages: [
-            {
-              role: "user",
-              content,
-            },
-          ],
-          model,
-        }),
+        body: JSON.stringify(body),
         responseType: "stream",
         tools: ["getCurrentTime"],
       }
