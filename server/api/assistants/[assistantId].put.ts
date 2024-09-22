@@ -1,6 +1,6 @@
 import { useValidatedParams, useValidatedBody, z } from "h3-zod"
 import OpenAI from "openai"
-import { assistantSchema } from "@/schemas/assistantSchema"
+import { assistantSchema } from "~/schemas/assistantSchema"
 
 export default eventHandler(async (event) => {
   const { assistantId } = await useValidatedParams(event, {

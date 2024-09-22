@@ -1,5 +1,9 @@
+<script setup></script>
 <template>
-  <div>
+  <div class="flex flex-row">
+    <div class="flex-none w-80">
+      <SideBar />
+    </div>
     <NuxtPage />
   </div>
 </template>

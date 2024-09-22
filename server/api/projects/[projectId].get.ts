@@ -1,4 +1,4 @@
-import { projects } from "@/database/schema"
+import { projects } from "~/database/schema"
 import { asc } from "drizzle-orm"
 import { useValidatedParams, useValidatedBody, z, zh } from "h3-zod"
 

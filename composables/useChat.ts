@@ -144,8 +144,8 @@ export function useChat() {
     try {
       const { messages: data } = await $fetch(url)
 
-      // messages.value = [...messages.value, ...data];
       messages.value = data
+      scrollToBottom()
     } catch (err: any) {
       error.value = err.message || "Unknown error occurred"
 

@@ -1,5 +1,5 @@
 import OpenAI from "openai"
-import { useTools } from "@/composables/useTools"
+import { useTools } from "~/composables/useTools"
 import { useValidatedParams, z, zh } from "h3-zod"
 
 export default defineEventHandler(async (event) => {

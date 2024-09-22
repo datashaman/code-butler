@@ -1,6 +1,6 @@
 import { eq, and } from "drizzle-orm"
 import { useValidatedParams, useValidatedBody, z, zh } from "h3-zod"
-import { projectSchema } from "@/schemas/projectSchema"
+import { projectSchema } from "~/schemas/projectSchema"
 
 export default eventHandler(async (event) => {
   const { projectId } = await useValidatedParams(event, {

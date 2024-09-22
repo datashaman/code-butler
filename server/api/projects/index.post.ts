@@ -1,6 +1,6 @@
 import { useValidatedBody, z } from "h3-zod"
 import { OpenAI } from "openai"
-import { projectSchema } from "@/schemas/projectSchema"
+import { projectSchema } from "~/schemas/projectSchema"
 
 export default eventHandler(async (event) => {
   const values = await useValidatedBody(event, projectSchema)
