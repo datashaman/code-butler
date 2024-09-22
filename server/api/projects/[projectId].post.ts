@@ -58,12 +58,14 @@ export default defineEventHandler(async (event) => {
 
   const stream = new ReadableStream({
     async start(controller) {
-      const stream = openai.beta.threads.runs.stream(project.threadId, {
+      const params = {
         ...(await readBody(event)),
         additional_instructions: project.description,
-        assistant_id: process.env.OPENAI_ASSISTANT_ID,
+        assistant_id: project.assistantId,
         tools: tools.allTools(),
-      })
+      }
+
+      const stream = openai.beta.threads.runs.stream(project.threadId, params)
 
       observeRunStream(stream, controller)
     },
