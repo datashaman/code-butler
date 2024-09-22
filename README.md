@@ -70,6 +70,8 @@ The project description is important. It is sent as additional instructions to t
 
 Use this to provide context and constraints for the project. Describe the project requirements, the programming language, the libraries and frameworks used, and any other relevant information that will help the assistant understand the project.
 
+_Ensure the `path` field is set to the correct path to the project directory. Sadly we cannot use a directory picker in the browser, so you will have to type the path manually or copy it from the console._
+
 ## architecture
 
 The project is a [Nuxt.js](https://nuxt.com/) app with a _SQLite_ database.
