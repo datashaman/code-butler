@@ -1,75 +1,69 @@
-# Nuxt 3 Minimal Starter
+# code-butler
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+OpenAI assistants that helps you write code.
 
-## Setup
+The app is an interface to define assistants and projects.
+The AI assistants have access to file contents and can make changes to them (using OpenAI Function Calling).
 
-Make sure to install the dependencies:
+_code-butler..._
+* is a proof of concept
+* is a work in progress
+* **makes destructive changes to your project files**
+* **is not responsible for any data loss or corruption**
+
+**Use with caution and source control.**
+
+## installation
+
+Install the [GitHub CLI](https://cli.github.com/):
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+brew install gh
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+Clone the repository:
 
 ```bash
-# npm
-npm run dev
+gh repo clone datashaman/code-butler
+cd code-butler
+```
 
-# pnpm
-pnpm run dev
+Install dependencies:
 
-# yarn
+```bash
+yarn
+```
+
+## configuration
+
+Copy `.env.example` file to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file and set `OPENAI_API_KEY` to your OpenAI API key.
+
+## database migration
+
+This creates and migrates a _SQLite_ database `database/db.sqlite`:
+
+```bash
+yarn db:migrate
+```
+
+## development
+
+Start the development server:
+
+```bash
 yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+This will start the server at [http://localhost:3000](http://localhost:3000).
 
-Build the application for production:
+## architecture
 
-```bash
-# npm
-npm run build
+The project is a [Nuxt.js](https://nuxt.com/) app with a _SQLite_ database.
 
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+[Tailwind CSS](https://tailwindcss.com/) and [DaisyUI](https://daisyui.com/) are used for styling.

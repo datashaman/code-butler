@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "code-butler",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare",
     "lint": "prettier --write .",
     "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push"
+    "db:migrate": "drizzle-kit push"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
