@@ -15,6 +15,12 @@ _code-butler..._
 
 _You do not have to point the assistant to your whole project directory. You can point it to a subdirectory, focusing on just components (for example). It is up to you to decide how much access you want to give the assistant. Less is better, less room to make mistakes._
 
+## roadmap
+
+* [x] create project
+* [x] create assistant
+* [x] chat with assistant
+* [ ] undo changes
 
 ## installation
 
