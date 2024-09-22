@@ -3,7 +3,7 @@ import { OiSidebarExpand, OiSidebarCollapse } from "oh-vue-icons/icons"
 import {
   BiArrowUpCircleFill,
   BiPencilSquare,
-  BiPlusSquareFill,
+  BiPlusSquare,
 } from "oh-vue-icons/icons"
 
 addIcons(
@@ -11,7 +11,7 @@ addIcons(
   OiSidebarCollapse,
   BiArrowUpCircleFill,
   BiPencilSquare,
-  BiPlusSquareFill,
+  BiPlusSquare,
 )
 
 export default defineNuxtPlugin((nuxtApp) => {

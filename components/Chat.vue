@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { marked } from "marked"
 import markedLinkifyIt from "marked-linkify-it"
-import DOMPurify from "dompurify"
+import DOMPurify from "isomorphic-dompurify"
 
 const props = defineProps({
   projectId: {
-    type: Number,
+    type: String,
     required: true,
   },
 })
@@ -35,6 +35,16 @@ const newMessage = ref("")
 const activeModel = ref(null)
 const models = ref([])
 
+const { data: modelsData } = await useFetch("/api/models")
+const { models: modelsValue } = modelsData.value
+models.value = modelsValue
+
+const { data: projectData } = await useFetch(`/api/projects/${props.projectId}`)
+const { project: projectValue } = projectData.value
+project.value = projectValue
+
+await fetchMessages(project.value.threadId)
+
 const handleSendMessage = async (evt) => {
   if (evt.shiftKey) return
   if (!newMessage.value) return
@@ -60,22 +70,12 @@ watch(
 )
 
 onMounted(async () => {
-  const { models: modelData } = await $fetch("/api/models")
-  models.value = modelData
-
   const modelValue = localStorage.getItem("activeModel")
 
   if (modelValue) {
     const model = JSON.parse(modelValue)
     activeModel.value = model
   }
-
-  const { project: projectData } = await $fetch(
-    `/api/projects/${props.projectId}`,
-  )
-  project.value = projectData
-
-  await fetchMessages(project.value.threadId)
 })
 </script>
 <template>

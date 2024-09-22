@@ -2,7 +2,7 @@
 <template>
   <div class="flex flex-row">
     <div class="flex-none w-80">
-      <SideBar />
+      <SideBar class="h-screen" />
     </div>
     <NuxtPage />
   </div>

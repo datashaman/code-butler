@@ -6,9 +6,15 @@ const props = defineProps({
   },
 })
 
+const model = ref("")
 const name = ref("")
 const description = ref("")
 const instructions = ref("")
+
+const models = ref([])
+
+const { data: modelsData } = await useFetch("/api/models")
+models.value = modelsData.value.models
 
 if (props.assistantId) {
   const { data } = await useFetch(`/api/assistants/${props.assistantId}`)
@@ -19,35 +25,63 @@ if (props.assistantId) {
 }
 
 const createAssistant = async () => {
-  const response = await $fetch("/api/assistants", {
-    mestthod: "POST",
+  const { assistant } = await $fetch("/api/assistants", {
+    method: "POST",
     body: JSON.stringify({
+      model: model.value,
       name: name.value,
       description: description.value,
       instructions: instructions.value,
     }),
   })
+
+  return assistant
 }
 
 const updateAssistant = async () => {
-  const response = await $fetch(`/api/assistants/${props.assistantId}`, {
+  const { assistant } = await $fetch(`/api/assistants/${props.assistantId}`, {
     method: "PUT",
     body: JSON.stringify({
+      model: model.value,
       name: name.value,
       description: description.value,
       instructions: instructions.value,
     }),
   })
+
+  return assistant
+}
+
+const saveAssistant = async () => {
+  if (props.assistantId) {
+    await updateAssistant()
+  } else {
+    const assistant = await createAssistant()
+    await navigateTo(`/assistants/${assistant.id}/edit`)
+  }
 }
 
 const deleteAssistant = async () => {
   const response = await $fetch(`/api/assistants/${props.assistantId}`, {
     method: "DELETE",
   })
+
+  await navigateTo("/assistants/create")
 }
 </script>
 <template>
-  <form>
+  <form @submit.prevent="saveAssistant">
+    <div class="form-control w-full">
+      <div class="label">
+        <div class="label-text">Model</div>
+      </div>
+      <select class="select select-bordered w-full" v-model="model" required>
+        <option value="">Select a Model</option>
+        <option v-for="m in models" :value="m">
+          {{ m }}
+        </option>
+      </select>
+    </div>
     <div class="form-control w-full">
       <div class="label">
         <div class="label-text">Name</div>
@@ -83,12 +117,12 @@ const deleteAssistant = async () => {
     </div>
     <div class="mt-4 flex justify-between">
       <template v-if="props.assistantId">
-        <button class="btn btn-error" @click="deleteAssistant">Delete</button>
-        <button class="btn btn-primary" @click="updateAssistant">Update</button>
+        <button class="btn btn-error" @click.prevent="deleteAssistant">
+          Delete
+        </button>
+        <button class="btn btn-primary" type="submit">Update</button>
       </template>
-      <button v-else class="btn btn-primary" @click="createAssistant">
-        Create
-      </button>
+      <button v-else class="btn btn-primary" type="submit">Create</button>
     </div>
   </form>
 </template>

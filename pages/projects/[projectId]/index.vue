@@ -1,3 +1,3 @@
 <template>
-  <Chat projectId="$route.params.projectId" />
+  <Chat :projectId="$route.params.projectId" />
 </template>

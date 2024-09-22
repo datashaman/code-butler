@@ -27,7 +27,7 @@ if (props.projectId) {
 }
 
 const createProject = async () => {
-  const response = await $fetch("/api/projects", {
+  const { project } = await $fetch("/api/projects", {
     method: "POST",
     body: JSON.stringify({
       name: name.value,
@@ -36,10 +36,12 @@ const createProject = async () => {
       description: description.value,
     }),
   })
+
+  return project
 }
 
 const updateProject = async () => {
-  const response = await $fetch(`/api/projects/${props.projectId}`, {
+  const { project } = await $fetch(`/api/projects/${props.projectId}`, {
     method: "PUT",
     body: JSON.stringify({
       name: name.value,
@@ -48,17 +50,30 @@ const updateProject = async () => {
       description: description.value,
     }),
   })
+
+  return project
+}
+
+const saveProject = async () => {
+  if (props.projectId) {
+    await updateProject()
+  } else {
+    const project = await createProject()
+    await navigateTo(`/projects/${project.id}`)
+  }
 }
 
 const deleteProject = async () => {
   const response = await $fetch(`/api/projects/${props.projectId}`, {
-    metehlooprd: "DELETE",
+    method: "DELETE",
   })
+
+  await navigateTo("/projects/create")
 }
 </script>
 <template>
   <div>
-    <form>
+    <form @submit.prevent="saveProject">
       <div class="form-control w-full">
         <div class="label">
           <div class="label-text">Name</div>
@@ -95,11 +110,9 @@ const deleteProject = async () => {
       <div class="pt-4 w-full flex justify-between">
         <template v-if="props.projectId">
           <button class="btn btn-error" @click="deleteProject">Delete</button>
-          <button class="btn btn-primary" @click="updateProject">Update</button>
+          <button class="btn btn-primary" type="submit">Update</button>
         </template>
-        <button v-else class="btn btn-primary" @click="createProject">
-          Create
-        </button>
+        <button v-else class="btn btn-primary" type="submit">Create</button>
       </div>
     </form>
   </div>
