@@ -3211,6 +3211,7 @@ __metadata:
     daisyui: "npm:^4.12.10"
     drizzle-kit: "npm:0.22.8"
     drizzle-orm: "npm:^0.33.0"
+    h3: "npm:^1.12.0"
     h3-zod: "npm:^0.5.3"
     isomorphic-dompurify: "npm:^2.15.0"
     marked: "npm:^14.1.2"
