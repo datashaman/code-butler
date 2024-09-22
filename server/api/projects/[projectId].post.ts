@@ -60,6 +60,7 @@ export default defineEventHandler(async (event) => {
     async start(controller) {
       const stream = openai.beta.threads.runs.stream(project.threadId, {
         ...(await readBody(event)),
+        additional_instructions: project.description,
         assistant_id: process.env.OPENAI_ASSISTANT_ID,
         tools: tools.allTools(),
       })
