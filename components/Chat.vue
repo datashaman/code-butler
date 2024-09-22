@@ -34,6 +34,10 @@ const projectModal = ref(null)
 const activeProject = ref(null)
 const activeModel = ref(null)
 const models = ref([])
+const assistants = ref([])
+const assistant = ref(null)
+const assistantId = ref(null)
+const activeAssistant = ref(null)
 
 const handleSendMessage = async (evt) => {
   if (evt.shiftKey) return
@@ -56,6 +60,7 @@ const createProject = async () => {
       body: JSON.stringify({
         name: name.value,
         path: path.value,
+        assistantId: assistantId.value,
         description: description.value,
       }),
     })
@@ -84,6 +89,7 @@ const updateProject = async () => {
         body: JSON.stringify({
           name: activeProject.value.name,
           path: activeProject.value.path,
+          assistantId: activeProject.value.assistantId,
           description: activeProject.value.description,
         }),
       },
@@ -107,6 +113,8 @@ const resetProject = async () => {
 
 const closeProjectModal = async () => {
   name.value = ""
+  path.value = ""
+  assistantId.value = ""
   description.value = ""
   projectModal.value.close()
 }
@@ -187,6 +195,9 @@ onMounted(async () => {
     activeModel.value = model
   }
 
+  const { assistants: assistantData } = await $fetch("/api/assistants")
+  assistants.value = assistantData
+
   const { projects: projectData } = await $fetch("/api/projects")
   projects.value = projectData
 
@@ -207,8 +218,30 @@ onMounted(async () => {
   <div class="flex flex-row">
     <div v-if="sidebarOpen" class="flex-none w-80 py-2 bg-base-200">
       <ul class="menu">
-        <li><button @click="projectModal.showModal()">New Project</button></li>
-        <li><h2 class="menu-title">Projects</h2></li>
+        <li class="flex flex-row">
+          <h2 class="flex-1 menu-title">Assistants</h2>
+          <button @click="assistantModal.showModal()">
+            <v-icon name="bi-plus-square-fill" />
+          </button>
+        </li>
+        <li v-for="assistant in assistants" :key="assistant.id">
+          <a
+            :class="{
+              active: activeAssistant && activeAssistant === assistant,
+            }"
+            @click.prevent="activeAssistant = assistant"
+            >{{ assistant.name || "..." }}</a
+          >
+        </li>
+      </ul>
+
+      <ul class="menu">
+        <li class="flex flex-row">
+          <h2 class="flex-1 menu-title">Projects</h2>
+          <button @click="projectModal.showModal()">
+            <v-icon name="bi-plus-square-fill" />
+          </button>
+        </li>
         <li v-for="project in projects" :key="project.id">
           <a
             :class="{ active: activeProject && activeProject === project }"
@@ -243,6 +276,24 @@ onMounted(async () => {
             class="input"
             placeholder="Project Name"
           />
+        </div>
+
+        <div class="form-control w-full">
+          <label class="label">
+            <span class="label-text">Assistant</span>
+          </label>
+          <select
+            v-model="activeProject.assistantId"
+            class="select select-bordered w-full"
+          >
+            <option
+              v-for="assistant in assistants"
+              :key="assistant.id"
+              :value="assistant.id"
+            >
+              {{ assistant.name }}
+            </option>
+          </select>
         </div>
 
         <div class="form-control w-full">
@@ -370,6 +421,20 @@ onMounted(async () => {
         />
       </div>
       <div class="form-control w-full">
+        <label class="label">
+          <span class="label-text">Assistant</span>
+        </label>
+        <select v-model="assistantId" class="select select-bordered w-full">
+          <option
+            v-for="assistant in assistants"
+            :key="assistant.id"
+            :value="assistant.id"
+          >
+            {{ assistant.name }}
+          </option>
+        </select>
+      </div>
+      <div class="form-control w-full">
         <div class="label">
           <div class="label-text">Description</div>
         </div>
@@ -386,9 +451,47 @@ onMounted(async () => {
       </div>
     </div>
   </dialog>
+  <dialog ref="assistantModal" class="modal">
+    <div class="modal-box">
+      <div class="form-control w-full">
+        <div class="label">
+          <div class="label-text">Name</div>
+        </div>
+        <input
+          type="text"
+          class="input input-bordered"
+          placeholder="Assistant Name"
+          v-model="name"
+          required
+        />
+      </div>
+      <div class="form-control w-full">
+        <div class="label">
+          <div class="label-text">Description</div>
+        </div>
+        <textarea
+          class="textarea textarea-bordered textarea-sm w-full"
+          placeholder="Assistant Description"
+        />
+      </div>
+      <div class="modal-action">
+        <button class="btn btn-secondary" @click="closeAssistantModal">
+          Cancel
+        </button>
+        <button class="btn btn-primary" @click="createAssistant">Create</button>
+      </div>
+    </div>
+  </dialog>
 </template>
 <style>
 .sidebar {
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
+}
+
+.sidebar h2 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--fallback-bc, oklch(var(--bc) / 0.4));
+  line-height: 1.25rem;
 }
 </style>

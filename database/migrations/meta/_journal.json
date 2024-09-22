@@ -15,6 +15,13 @@
       "when": 1726902205411,
       "tag": "0001_tired_valkyrie",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1726973952116,
+      "tag": "0002_medical_daimon_hellstrom",
+      "breakpoints": true
     }
   ]
 }
