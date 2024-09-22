@@ -1,6 +1,6 @@
 # code-butler
 
-OpenAI assistants that helps you write code.
+OpenAI assistants that help you write code.
 
 The app is an interface to define assistants and projects.
 The AI assistants have access to file contents and can make changes to them (using OpenAI Function Calling).
