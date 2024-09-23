@@ -287,7 +287,7 @@ const runIcon = (run) => {
     in_progress: "hi-refresh",
     requires_action: "hi-exclamation",
     cancelling: "hi-ban",
-    cancelled: "hi-xcircle",
+    cancelled: "hi-x-circle",
     failed: "hi-x",
     completed: "hi-check-circle",
     incomplete: "hi-minus-circle",
