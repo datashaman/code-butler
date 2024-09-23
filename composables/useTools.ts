@@ -200,7 +200,23 @@ export const useTools = async (project) => {
   const handleToolCall = async (toolCall) => {
     console.log("Handling tool call:", toolCall)
     const args = JSON.parse(toolCall.function.arguments)
-    return runTool(toolCall.function.name, args)
+    const response = runTool(toolCall.function.name, args)
+
+    const action = useDB()
+      .insert(tables.actions)
+      .values({
+        projectId: project.id,
+        assistantId: project.assistantId,
+        tool: toolCall.function.name,
+        args,
+        response,
+      })
+      .returning()
+      .get()
+
+    console.log("Action:", action)
+
+    return response
   }
 
   return {

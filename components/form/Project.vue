@@ -16,6 +16,24 @@ const path = ref("")
 const assistantId = ref("")
 const description = ref("")
 
+const errors = ref({})
+
+const handleValidationError = (e) => {
+  const { response } = e
+  if (response.status === 400) {
+    const issues = response._data.data.issues
+    errors.value = issues.reduce((acc, issue) => {
+      const attribute = issue.path.join(".") // Converts path array to a string (e.g., 'description')
+      acc[attribute] = issue.message
+      return acc
+    }, {})
+
+    return true
+  }
+
+  return false
+}
+
 await assistantStore.fetchAssistants()
 
 if (props.projectId) {
@@ -57,11 +75,19 @@ const updateProject = async () => {
 }
 
 const saveProject = async () => {
-  if (props.projectId) {
-    await updateProject()
-  } else {
-    const project = await createProject()
-    await navigateTo(`/projects/${project.id}`)
+  errors.value = {}
+
+  try {
+    if (props.projectId) {
+      await updateProject()
+    } else {
+      const project = await createProject()
+      await navigateTo(`/projects/${project.id}`)
+    }
+  } catch (e) {
+    if (!handleValidationError(e)) {
+      throw e
+    }
   }
 }
 
@@ -86,6 +112,9 @@ const deleteProject = async () => {
           <div class="label-text">Name</div>
         </div>
         <input type="text" class="input input-bordered" v-model="name" />
+        <div v-if="errors.name" class="label">
+          <div class="label-text-alt text-error">{{ errors.name }}</div>
+        </div>
       </div>
 
       <div class="form-control w-full">
@@ -93,6 +122,9 @@ const deleteProject = async () => {
           <div class="label-text">Path</div>
         </div>
         <input type="text" class="input input-bordered" v-model="path" />
+        <div v-if="errors.path" class="label">
+          <div class="label-text-alt text-error">{{ errors.path }}</div>
+        </div>
       </div>
 
       <div class="form-control w-full">
@@ -108,13 +140,22 @@ const deleteProject = async () => {
             {{ assistant.name }}
           </option>
         </select>
+        <div v-if="errors.assistantId" class="label">
+          <div class="label-text-alt text-error">{{ errors.assistantId }}</div>
+        </div>
       </div>
 
       <div class="form-control w-full">
         <div class="label">
           <div class="label-text">Description</div>
         </div>
-        <textarea class="textarea textarea-bordered" v-model="description" />
+        <textarea
+          class="textarea textarea-bordered w-full"
+          v-model="description"
+        />
+        <div v-if="errors.description" class="label">
+          <div class="label-text-alt text-error">{{ errors.description }}</div>
+        </div>
       </div>
 
       <div class="pt-4 w-full flex justify-between">
