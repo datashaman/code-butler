@@ -333,8 +333,12 @@ onMounted(async () => {
     activeModel.value = model
   }
 
+<<<<<<< HEAD
   scrollMessages()
   scrollRuns()
+=======
+  scrollToBottom()
+>>>>>>> 95d34d9 (wip)
 })
 </script>
 <template>
