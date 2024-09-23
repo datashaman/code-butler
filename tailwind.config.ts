@@ -1,9 +1,5 @@
 export default {
-  content: [
-    "./app.vue",
-    "./components/**/*.vue",
-    "./pages/**/*.vue",
-  ],
+  content: ["./app.vue", "./components/**/*.vue", "./pages/**/*.vue"],
   plugins: [require("daisyui")],
   daisyui: {
     themes: [
