@@ -39,6 +39,10 @@ export default defineEventHandler(async (event) => {
           controller.enqueue(new TextEncoder().encode(str))
         }
       })
+      .on("messageDone", (message) => {
+        console.log("messageDone")
+        console.log(message.content[0].text.value)
+      })
       .on("end", async () => {
         const run = stream.currentRun()
 
