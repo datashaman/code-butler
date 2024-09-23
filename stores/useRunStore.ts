@@ -16,6 +16,7 @@ export const useRunStore = defineStore("runs", () => {
       runs.value[index] = evt.data
     } else {
       runs.value = [evt.data, ...runs.value]
+      scrollToBottom()
     }
   }
 

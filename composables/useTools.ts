@@ -213,7 +213,7 @@ export const useTools = async (project) => {
   const handleToolCall = async (toolCall) => {
     console.log("Handling tool call:", toolCall)
     const args = JSON.parse(toolCall.function.arguments)
-    const response = runTool(toolCall.function.name, args)
+    const response = await runTool(toolCall.function.name, args)
 
     const attributes = {
       projectId: project.id,
