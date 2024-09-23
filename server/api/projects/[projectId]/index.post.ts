@@ -24,6 +24,10 @@ export default defineEventHandler(async (event) => {
           new TextEncoder().encode(JSON.stringify(delta) + "\n"),
         )
       })
+      .on("messageDone", (message) => {
+        console.log("messageDone")
+        console.log(message.content[0].text.value)
+      })
       .on("end", async () => {
         const run = stream.currentRun()
 
