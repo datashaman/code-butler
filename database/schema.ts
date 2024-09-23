@@ -19,7 +19,7 @@ export const actions = sqliteTable("actions", {
   projectId: integer("project_id").notNull(),
   assistantId: text("assistant_id").notNull(),
   tool: text("tool").notNull(),
-  args: text("args", { json: true }).notNull().default("{}"),
-  response: text("response", { json: true }).notNull().default("{}"),
+  args: text("args", { mode: "json" }).notNull().default("{}"),
+  response: text("response", { mode: "json" }).notNull().default("{}"),
   createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 })

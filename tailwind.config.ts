@@ -1,6 +1,8 @@
 export default {
   content: [
-    "./*.vue",
+    "./app.vue",
+    "./components/**/*.vue",
+    "./pages/**/*.vue",
     "./vueform.config.ts",
     "./node_modules/@vueform/vueform/themes/tailwind/**/*.vue",
     "./node_modules/@vueform/vueform/themes/tailwind/**/*.js",
@@ -39,4 +41,12 @@ export default {
       "winter",
     ],
   },
+  safelist: [
+    {
+      pattern: /btn-.*/,
+    },
+    {
+      pattern: /badge-.*/,
+    },
+  ],
 }

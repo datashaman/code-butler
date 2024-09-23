@@ -3209,12 +3209,15 @@ __metadata:
     "@types/better-sqlite3": "npm:^7.6.11"
     better-sqlite3: "npm:^11.3.0"
     daisyui: "npm:^4.12.10"
+    date-fns: "npm:^4.1.0"
     drizzle-kit: "npm:0.22.8"
     drizzle-orm: "npm:^0.33.0"
     h3: "npm:^1.12.0"
     h3-zod: "npm:^0.5.3"
+    highlight.js: "npm:^11.10.0"
     isomorphic-dompurify: "npm:^2.15.0"
     marked: "npm:^14.1.2"
+    marked-highlight: "npm:^2.1.4"
     marked-linkify-it: "npm:^3.1.11"
     nuxt: "npm:^3.13.0"
     nuxt-snackbar: "npm:^1.1.2"
@@ -3675,6 +3678,13 @@ __metadata:
     whatwg-mimetype: "npm:^4.0.0"
     whatwg-url: "npm:^14.0.0"
   checksum: 10c0/1b894d7d41c861f3a4ed2ae9b1c3f0909d4575ada02e36d3d3bc584bdd84278e20709070c79c3b3bff7ac98598cb191eb3e86a89a79ea4ee1ef360e1694f92ad
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "date-fns@npm:4.1.0"
+  checksum: 10c0/b79ff32830e6b7faa009590af6ae0fb8c3fd9ffad46d930548fbb5acf473773b4712ae887e156ba91a7b3dc30591ce0f517d69fd83bd9c38650fdc03b4e0bac8
   languageName: node
   linkType: hard
 
@@ -5226,6 +5236,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"highlight.js@npm:^11.10.0":
+  version: 11.10.0
+  resolution: "highlight.js@npm:11.10.0"
+  checksum: 10c0/cd8bf7ef06cbd72ddb83580ecabe769f08f062be8bb82d2eb492d31c17f7480d1f8d14a66fc81deee0601645435f19f04c470510563f847242a41ccff0ab873e
+  languageName: node
+  linkType: hard
+
 "hookable@npm:^5.5.3":
   version: 5.5.3
   resolution: "hookable@npm:5.5.3"
@@ -6150,6 +6167,15 @@ __metadata:
     promise-retry: "npm:^2.0.1"
     ssri: "npm:^10.0.0"
   checksum: 10c0/df5f4dbb6d98153b751bccf4dc4cc500de85a96a9331db9805596c46aa9f99d9555983954e6c1266d9f981ae37a9e4647f42b9a4bb5466f867f4012e582c9e7e
+  languageName: node
+  linkType: hard
+
+"marked-highlight@npm:^2.1.4":
+  version: 2.1.4
+  resolution: "marked-highlight@npm:2.1.4"
+  peerDependencies:
+    marked: ">=4 <15"
+  checksum: 10c0/f278211e9069473debbe400a3ee47aac08a769be7a1e6a38d4b26d6dd7c6e4540254c9adc4e07d8ca01be5f9f399bc075d45f1f3d85b2d453aa027e10ffd8380
   languageName: node
   linkType: hard
 
