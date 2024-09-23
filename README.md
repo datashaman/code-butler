@@ -74,7 +74,7 @@ This will start the server at [http://localhost:3000](http://localhost:3000).
 
 ## prompts
 
-The assistant instructions are important. They form the basis of the assistant's knowledge and capabilities, and are used to generate the assistant's responses.
+The assistant instructions are important. They form the basis of the assistant's knowledge and capabilities, and are used to generate the assistant's responses. All tools should be selected when creating, and updating the assistant.
 
 The project description is important. It is sent as additional instructions to the assistant when it is called within a project.
 
