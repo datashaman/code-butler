@@ -32,7 +32,7 @@ const {
 
 const project = ref(null)
 const newMessage = ref("")
-const activeModel = ref("")
+const activeModel = ref("assistant")
 const models = ref([])
 
 const { data: modelsData } = await useFetch("/api/models")
@@ -93,9 +93,11 @@ onMounted(async () => {
                 <li><h2 class="menu-title">Model</h2></li>
                 <li>
                   <a
-                    :class="{ active: !activeModel }"
+                    :class="{
+                      active: activeModel && activeModel === 'assistant',
+                    }"
                     @click="
-                      (activeModel = null),
+                      (activeModel = 'assistant'),
                         $refs.modelDetails.removeAttribute('open')
                     "
                   >
