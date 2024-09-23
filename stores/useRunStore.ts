@@ -5,7 +5,7 @@ export const useRunStore = defineStore("runs", () => {
   const fetchRuns = async (projectId) => {
     const { data } = await useFetch(`/api/projects/${projectId}/runs`)
     runs.value = data.value.runs
-    scrollToBottom()
+    scrollRuns()
   }
 
   const handleEvent = (evt) => {
@@ -16,13 +16,15 @@ export const useRunStore = defineStore("runs", () => {
       runs.value[index] = evt.data
     } else {
       runs.value = [evt.data, ...runs.value]
-      scrollToBottom()
+      scrollRuns()
     }
   }
 
-  const scrollToBottom = () => {
+  const scrollRuns = () => {
     if (runsContainer.value) {
-      runsContainer.value.scrollTop = runsContainer.value.scrollHeight
+      nextTick(() => {
+        runsContainer.value.scrollTop = runsContainer.value.scrollHeight
+      })
     }
   }
 
@@ -30,7 +32,7 @@ export const useRunStore = defineStore("runs", () => {
     runs,
     fetchRuns,
     handleEvent,
-    scrollToBottom,
+    scrollRuns,
     runsContainer,
   }
 })
