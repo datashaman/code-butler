@@ -210,15 +210,11 @@ export const useTools = async (project) => {
       response,
     }
 
-    console.log("Attributes:", attributes)
-
     const action = useDB()
       .insert(tables.actions)
       .values(attributes)
       .returning()
       .get()
-
-    console.log("Action:", action)
 
     return response
   }
