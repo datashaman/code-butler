@@ -1,9 +1,8 @@
 export default {
   content: [
-    "./*.vue",
-    "./vueform.config.ts",
-    "./node_modules/@vueform/vueform/themes/tailwind/**/*.vue",
-    "./node_modules/@vueform/vueform/themes/tailwind/**/*.js",
+    "./app.vue",
+    "./components/**/*.vue",
+    "./pages/**/*.vue",
   ],
   plugins: [require("daisyui")],
   daisyui: {
@@ -39,4 +38,10 @@ export default {
       "winter",
     ],
   },
+  safelist: [
+    { pattern: /bg-.*/ },
+    { pattern: /btn-.*/ },
+    { pattern: /badge-.*/ },
+    { pattern: /text-.*/ },
+  ],
 }

@@ -202,19 +202,19 @@ export const useTools = async (project) => {
     const args = JSON.parse(toolCall.function.arguments)
     const response = runTool(toolCall.function.name, args)
 
+    const attributes = {
+      projectId: project.id,
+      assistantId: project.assistantId,
+      tool: toolCall.function.name,
+      args,
+      response,
+    }
+
     const action = useDB()
       .insert(tables.actions)
-      .values({
-        projectId: project.id,
-        assistantId: project.assistantId,
-        tool: toolCall.function.name,
-        args,
-        response,
-      })
+      .values(attributes)
       .returning()
       .get()
-
-    console.log("Action:", action)
 
     return response
   }
