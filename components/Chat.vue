@@ -34,14 +34,183 @@ const renderMarkdown = (content) => {
   return DOMPurify.sanitize(html)
 }
 
-const {
-  messagesContainer,
-  messages,
-  sendMessage,
+const messages = ref<{ role: string; content: string }[]>([])
+const isLoading = ref(false)
+const error = ref<string | null>(null)
 
-  fetchMessages,
-  scrollMessages,
-} = useChat()
+const messagesContainer = ref<HTMLElement | null>(null)
+
+const onMessageCallbacks: Ref<
+  ((message: { role: string; content: string }) => void)[]
+> = ref([])
+
+watch(
+  messages,
+  (newMessages) => {
+    const latestMessage = newMessages[newMessages.length - 1]
+    if (latestMessage) {
+      onMessageCallbacks.value.forEach((callback) => callback(latestMessage))
+    }
+  },
+  { deep: true },
+)
+
+const onMessage = (
+  callback: (message: { role: string; content: string }) => void,
+) => {
+  onMessageCallbacks.value.push(callback)
+}
+
+const scrollMessages = () => {
+  nextTick(() => {
+    if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+    }
+  })
+}
+
+const sendMessage = async (project, content: string, model: string) => {
+  isLoading.value = true
+  error.value = null
+
+  messages.value.push({
+    role: "user",
+    content: [
+      {
+        type: "text",
+        text: {
+          value: content,
+        },
+      },
+    ],
+  })
+
+  scrollMessages()
+
+  const assistantContent = ref("...")
+
+  messages.value.push({
+    role: "assistant",
+    content: [
+      {
+        type: "text",
+        text: {
+          value: assistantContent,
+        },
+      },
+    ],
+  })
+
+  scrollMessages()
+
+  try {
+    const body = {
+      additional_messages: [
+        {
+          role: "user",
+          content,
+        },
+      ],
+    }
+
+    if (model !== "assistant") {
+      body.model = model
+    }
+
+    const params = {
+      method: "POST",
+      body: JSON.stringify(body),
+      responseType: "stream",
+    }
+
+    const response = await $fetch(`/api/projects/${project.id}`, params)
+    const reader = response.pipeThrough(new TextDecoderStream()).getReader()
+
+    while (true) {
+      const { done, value } = await reader.read()
+
+      if (done) {
+        break
+      }
+
+      value
+        .trim()
+        .split("\n")
+        .forEach((evt) => {
+          try {
+            const parsed = JSON.parse(evt)
+            switch (parsed.event) {
+              case "thread.message.delta":
+                const delta = parsed.data.delta
+                console.log(delta)
+
+                if (assistantContent.value === "...") {
+                  assistantContent.value = ""
+                }
+
+                assistantContent.value += delta.content[0].text.value
+                scrollMessages()
+                break
+              case "thread.run.created":
+              case "thread.run.queued":
+              case "thread.run.in_progress":
+              case "thread.run.requires_action":
+              case "thread.run.completed":
+              case "thread.run.incomplete":
+              case "thread.run.failed":
+              case "thread.run.cancelling":
+              case "thread.run.cancelled":
+              case "thread.run.expired":
+                handleRunEvent(parsed)
+            }
+          } catch (e) {
+            console.error("Error parsing event:", e)
+          }
+        })
+    }
+  } catch (err: any) {
+    error.value = err.message || "Unknown error occurred"
+
+    setTimeout(() => {
+      error.value = null
+    }, 3000)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const fetchMessages = async (threadId) => {
+  let url = `/api/threads/${threadId}/messages`
+
+  isLoading.value = true
+  error.value = null
+
+  /*
+  const after =
+    messages.value.length > 0
+      ? messages.value[messages.value.length - 1].id
+      : null;
+
+  url += `?after=${after}`;
+  */
+
+  try {
+    const { data } = await useFetch(url)
+    const { messages: messagesValue } = data.value
+    messages.value = messagesValue
+    scrollMessages()
+  } catch (err: any) {
+    error.value = err.message || "Unknown error occurred"
+
+    setTimeout(() => {
+      error.value = null
+    }, 3000)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const projectStore = useProjectStore()
 
 const project = ref(null)
 const newMessage = ref("")
@@ -52,14 +221,42 @@ const { data: modelsData } = await useFetch("/api/models")
 const { models: modelsValue } = modelsData.value
 models.value = modelsValue
 
-const { data: projectData } = await useFetch(`/api/projects/${props.projectId}`)
-const { project: projectValue } = projectData.value
-project.value = projectValue
+project.value = await projectStore.fetchProject(props.projectId)
 
-const { fetchRuns, scrollRuns, runsContainer, runs } = useRunStore()
+const runs = ref([])
+const runsContainer = ref(null)
+
+const fetchRuns = async () => {
+  const { data } = await useFetch(`/api/projects/${props.projectId}/runs`)
+  const { runs: runsValue } = data.value
+  runs.value = runsValue
+
+  if (process.client) {
+    scrollRuns()
+  }
+}
+
+const handleRunEvent = (evt) => {
+  const index = runs.value.findIndex((run) => run.id == evt.data.id)
+
+  if (index !== -1) {
+    runs.value[index] = evt.data
+  } else {
+    runs.value = [...runs.value, evt.data]
+    scrollRuns()
+  }
+}
+
+const scrollRuns = () => {
+  nextTick(() => {
+    if (runsContainer.value) {
+      runsContainer.value.scrollTop = runsContainer.value.scrollHeight
+    }
+  })
+}
 
 await fetchMessages(project.value.threadId)
-await fetchRuns(props.projectId)
+await fetchRuns()
 
 const humanDifference = (timestamp) => {
   const date = new Date(timestamp * 1000)
@@ -82,6 +279,20 @@ const runClass = (run) => {
   }[run.status]
 
   return `bg-${type} text-${type}-content`
+}
+
+const runIcon = (run) => {
+  return {
+    queued: "hi-clock",
+    in_progress: "hi-refresh",
+    requires_action: "hi-exclamation",
+    cancelling: "hi-ban",
+    cancelled: "hi-xcircle",
+    failed: "hi-x",
+    completed: "hi-check-circle",
+    incomplete: "hi-minus-circle",
+    expired: "fa-regular-hourglass",
+  }[run.status]
 }
 
 const cancelRun = async (runId) => {
@@ -214,7 +425,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="flex flex-col h-screen px-4 py-6 overflow-hidden w-1/5">
+    <div class="flex flex-col h-screen px-4 py-6 w-1/3">
       <h1 class="font-bold text-xl pb-4">Runs</h1>
       <div
         class="flex-1 flex flex-col gap-2 overflow-y-auto"
@@ -227,7 +438,9 @@ onMounted(async () => {
         >
           <div class="card-body">
             <div class="flex justify-between">
-              <span>{{ run.status }}</span>
+              <div class="tooltip" :data-tip="run.status">
+                <v-icon :name="runIcon(run)" />
+              </div>
               <span>created {{ humanDifference(run.created_at) }}</span>
               <button
                 v-if="cancellableStatuses.includes(run.status)"
