@@ -92,7 +92,6 @@ export function useChat() {
         method: "POST",
         body: JSON.stringify(body),
         responseType: "stream",
-        tools: ["getCurrentTime"],
       }
 
       const response = await $fetch(`/api/projects/${project.id}`, params)
@@ -110,7 +109,6 @@ export function useChat() {
           .split("\n")
           .forEach((evt) => {
             const parsed = JSON.parse(evt)
-            console.log(evt)
             switch (parsed.event) {
               case "thread.message.delta":
                 const delta = parsed.data.delta

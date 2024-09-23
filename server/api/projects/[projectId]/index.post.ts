@@ -34,16 +34,11 @@ export default defineEventHandler(async (event) => {
   const observeRunStream = async (stream, controller) => {
     stream
       .on("event", (evt) => {
-        console.log(evt.event)
         if (eventsToForward.includes(evt.event)) {
-          controller.enqueue(
-            new TextEncoder().encode(JSON.stringify(evt) + "\n"),
-          )
+          const str = JSON.stringify(evt) + "\n"
+          console.log("forward:", str)
+          controller.enqueue(new TextEncoder().encode(str))
         }
-      })
-      .on("messageDone", (message) => {
-        console.log("messageDone")
-        console.log(message.content[0].text.value)
       })
       .on("end", async () => {
         const run = stream.currentRun()
@@ -52,19 +47,31 @@ export default defineEventHandler(async (event) => {
           run.status === "requires_action" &&
           run.required_action.type === "submit_tool_outputs"
         ) {
-          observeRunStream(
+          await observeRunStream(
             openai.beta.threads.runs.submitToolOutputsStream(
               run.thread_id,
               run.id,
               {
                 tool_outputs: await Promise.all(
                   run.required_action.submit_tool_outputs.tool_calls.map(
-                    async (toolCall) => ({
-                      tool_call_id: toolCall.id,
-                      output: JSON.stringify(
-                        await tools.handleToolCall(toolCall),
-                      ),
-                    }),
+                    async (toolCall) => {
+                      try {
+                        const output = await tools.handleToolCall(toolCall)
+
+                        return {
+                          tool_call_id: toolCall.id,
+                          output: JSON.stringify(output),
+                        }
+                      } catch (e) {
+                        return {
+                          tool_call_id: toolCall.id,
+                          output: JSON.stringify({
+                            success: false,
+                            error: e.message,
+                          }),
+                        }
+                      }
+                    },
                   ),
                 ),
               },
@@ -88,7 +95,7 @@ export default defineEventHandler(async (event) => {
 
       const stream = openai.beta.threads.runs.stream(project.threadId, params)
 
-      observeRunStream(stream, controller)
+      await observeRunStream(stream, controller)
     },
   })
 

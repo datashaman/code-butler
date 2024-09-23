@@ -34,9 +34,11 @@ export const useTools = async (project) => {
         }
       }
     },
-    listFiles: async () => {
+    listFiles: async ({ path }) => {
+      path = path || "/"
+
       try {
-        const files = await fs.readdir(project.path)
+        const files = await fs.readdir(normalizePath(path))
 
         return {
           success: true,
@@ -124,6 +126,17 @@ export const useTools = async (project) => {
       type: "function",
       function: {
         name: "listFiles",
+        parameters: {
+          type: "object",
+          properties: {
+            path: {
+              type: "string",
+              default: "/",
+            },
+          },
+          required: ["path"],
+          additionalProperties: false,
+        },
       },
     },
     moveFile: {

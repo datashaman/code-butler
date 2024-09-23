@@ -34,7 +34,7 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="flex flex-col px-4 py-6">
+  <div class="flex flex-col h-screen px-4 py-6 overflow-hidden">
     <h1 class="font-bold text-xl pb-4">Runs</h1>
     <div class="flex-1 flex flex-col gap-2 overflow-y-auto" ref="runsContainer">
       <div
