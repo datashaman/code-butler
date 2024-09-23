@@ -255,7 +255,37 @@ const scrollRuns = () => {
   })
 }
 
-const { fetchRuns, scrollRuns, runsContainer, runs } = useRunStore()
+const runs = ref([])
+const runsContainer = ref(null)
+
+const fetchRuns = async () => {
+  const { data } = await useFetch(`/api/projects/${props.projectId}/runs`)
+  const { runs: runsValue } = data.value
+  runs.value = runsValue
+
+  if (process.client) {
+    scrollRuns()
+  }
+}
+
+const handleRunEvent = (evt) => {
+  const index = runs.value.findIndex((run) => run.id == evt.data.id)
+
+  if (index !== -1) {
+    runs.value[index] = evt.data
+  } else {
+    runs.value = [...runs.value, evt.data]
+    scrollRuns()
+  }
+}
+
+const scrollRuns = () => {
+  nextTick(() => {
+    if (runsContainer.value) {
+      runsContainer.value.scrollTop = runsContainer.value.scrollHeight
+    }
+  })
+}
 
 await fetchMessages(project.value.threadId)
 await fetchRuns()
