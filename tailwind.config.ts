@@ -3,9 +3,6 @@ export default {
     "./app.vue",
     "./components/**/*.vue",
     "./pages/**/*.vue",
-    "./vueform.config.ts",
-    "./node_modules/@vueform/vueform/themes/tailwind/**/*.vue",
-    "./node_modules/@vueform/vueform/themes/tailwind/**/*.js",
   ],
   plugins: [require("daisyui")],
   daisyui: {

@@ -40,12 +40,11 @@ const runClass = (run) => {
       >
         <div class="card-body">
           <div class="flex justify-between">
-            created {{ humanDifference(run.created_at) }}
+            <span>{{ run.status }}</span>
+            <span>created {{ humanDifference(run.created_at) }}</span>
           </div>
 
-          <div class="card-actions">
-            {{ run.status }}
-          </div>
+          <div class="card-actions"></div>
         </div>
       </div>
     </div>
