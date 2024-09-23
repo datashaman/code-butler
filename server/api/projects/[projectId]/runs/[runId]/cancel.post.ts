@@ -1,23 +1,21 @@
 import OpenAI from "openai"
-import { useValidatedParams, useValidatedBody, z, zh } from "h3-zod"
+import { useValidatedParams, z, zh } from "h3-zod"
 
 export default defineEventHandler(async (event) => {
-  const { projectId } = await useValidatedParams(event, {
+  const { projectId, runId } = await useValidatedParams(event, {
     projectId: zh.intAsString,
+    runId: z.string(),
   })
 
   const project = useDB()
     .select()
     .from(tables.projects)
     .where(eq(tables.projects.id, projectId))
+    .limit(1)
     .get()
 
   const openai = new OpenAI()
-  const runs = []
+  const run = await openai.beta.threads.runs.cancel(project.threadId, runId)
 
-  for await (const run of openai.beta.threads.runs.list(project.threadId)) {
-    runs.push(run)
-  }
-
-  return { runs }
+  return { run }
 })
