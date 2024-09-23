@@ -1,11 +1,9 @@
 <script setup>
-import { formatDistanceToNow } from "date-fns"
-
 const props = defineProps({
   projectId: String,
 })
 
-const { fetchRuns, scrollToBottom, runsContainer, runs } = useRunStore()
+const { fetchRuns, scrollRuns, runsContainer, runs } = useRunStore()
 await fetchRuns(props.projectId)
 
 const humanDifference = (timestamp) => {
@@ -38,31 +36,7 @@ const cancelRun = async (runId) => {
 }
 
 onMounted(() => {
-  scrollToBottom()
+  scrollRuns()
 })
 </script>
-<template>
-  <div class="flex flex-col h-screen px-4 py-6 overflow-hidden">
-    <h1 class="font-bold text-xl pb-4">Runs</h1>
-    <div class="flex-1 flex flex-col gap-2 overflow-y-auto" ref="runsContainer">
-      <div
-        v-for="run in runs"
-        :key="run.id"
-        :class="'card card-compact rounded shadow ' + runClass(run)"
-      >
-        <div class="card-body">
-          <div class="flex justify-between">
-            <span>{{ run.status }}</span>
-            <span>created {{ humanDifference(run.created_at) }}</span>
-            <button
-              v-if="cancellableStatuses.includes(run.status)"
-              @click="cancelRun(run.id)"
-            >
-              <v-icon name="md-cancel" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
+<template></template>

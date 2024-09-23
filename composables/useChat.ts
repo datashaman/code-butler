@@ -30,9 +30,11 @@ export function useChat() {
     onMessageCallbacks.value.push(callback)
   }
 
-  const scrollToBottom = () => {
+  const scrollMessages = () => {
     if (messagesContainer.value) {
-      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+      nextTick(() => {
+        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+      })
     }
   }
 
@@ -52,9 +54,7 @@ export function useChat() {
       ],
     })
 
-    nextTick(() => {
-      scrollToBottom()
-    })
+    scrollMessages()
 
     const assistantContent = ref("...")
 
@@ -70,9 +70,7 @@ export function useChat() {
       ],
     })
 
-    nextTick(() => {
-      scrollToBottom()
-    })
+    scrollMessages()
 
     try {
       const body = {
@@ -120,7 +118,7 @@ export function useChat() {
                   }
 
                   assistantContent.value += delta.content[0].text.value
-                  scrollToBottom()
+                  scrollMessages()
                   break
                 case "thread.run.created":
                 case "thread.run.queued":
@@ -169,7 +167,7 @@ export function useChat() {
       const { data } = await useFetch(url)
       const { messages: messagesValue } = data.value
       messages.value = messagesValue
-      scrollToBottom()
+      scrollMessages()
     } catch (err: any) {
       error.value = err.message || "Unknown error occurred"
 
@@ -189,6 +187,6 @@ export function useChat() {
     onMessage,
     fetchMessages,
     messagesContainer,
-    scrollToBottom,
+    scrollMessages,
   }
 }
