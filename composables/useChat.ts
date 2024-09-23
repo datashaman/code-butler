@@ -1,6 +1,7 @@
 import { ref, watch, type Ref } from "vue"
 
 export function useChat() {
+  const runStore = useRunStore()
   const runtimeConfig = useRuntimeConfig()
   const messages = ref<{ role: string; content: string }[]>([])
   const isLoading = ref(false)
@@ -107,16 +108,32 @@ export function useChat() {
         value
           .trim()
           .split("\n")
-          .forEach((event) => {
-            if (event) {
-              const delta = JSON.parse(event).content[0].text.value
+          .forEach((evt) => {
+            const parsed = JSON.parse(evt)
+            console.log(evt)
+            switch (parsed.event) {
+              case "thread.message.delta":
+                const delta = parsed.data.delta
+                console.log(delta)
 
-              if (assistantContent.value === "...") {
-                assistantContent.value = ""
-              }
+                if (assistantContent.value === "...") {
+                  assistantContent.value = ""
+                }
 
-              assistantContent.value += delta
-              scrollToBottom()
+                assistantContent.value += delta.content[0].text.value
+                scrollToBottom()
+                break
+              case "thread.run.created":
+              case "thread.run.queued":
+              case "thread.run.in_progress":
+              case "thread.run.requires_action":
+              case "thread.run.completed":
+              case "thread.run.incomplete":
+              case "thread.run.failed":
+              case "thread.run.cancelling":
+              case "thread.run.cancelled":
+              case "thread.run.expired":
+                runStore.handleEvent(parsed)
             }
           })
       }

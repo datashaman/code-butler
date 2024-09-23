@@ -88,6 +88,8 @@ onMounted(async () => {
     const model = JSON.parse(modelValue)
     activeModel.value = model
   }
+
+  scrollToBottom()
 })
 </script>
 <template>

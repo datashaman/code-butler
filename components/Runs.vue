@@ -5,8 +5,8 @@ const props = defineProps({
   projectId: String,
 })
 
-const { data } = await useFetch(`/api/projects/${props.projectId}/runs`)
-const runs = ref(data.value.runs)
+const { fetchRuns, scrollToBottom, runsContainer, runs } = useRunStore()
+await fetchRuns(props.projectId)
 
 const humanDifference = (timestamp) => {
   const date = new Date(timestamp * 1000)
@@ -28,11 +28,15 @@ const runClass = (run) => {
 
   return `bg-${type} text-${type}-content`
 }
+
+onMounted(() => {
+  scrollToBottom()
+})
 </script>
 <template>
-  <div class="px-4 py-6">
+  <div class="flex flex-col px-4 py-6">
     <h1 class="font-bold text-xl pb-4">Runs</h1>
-    <div class="flex flex-col gap-2">
+    <div class="flex-1 flex flex-col gap-2 overflow-y-auto" ref="runsContainer">
       <div
         v-for="run in runs"
         :key="run.id"
@@ -43,8 +47,6 @@ const runClass = (run) => {
             <span>{{ run.status }}</span>
             <span>created {{ humanDifference(run.created_at) }}</span>
           </div>
-
-          <div class="card-actions"></div>
         </div>
       </div>
     </div>

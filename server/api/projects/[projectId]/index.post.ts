@@ -17,12 +17,29 @@ export default defineEventHandler(async (event) => {
   const tools = await useTools(project)
   const openai = new OpenAI()
 
+  const eventsToForward = [
+    "thread.message.delta",
+    "thread.run.created",
+    "thread.run.queued",
+    "thread.run.in_progress",
+    "thread.run.requires_action",
+    "thread.run.completed",
+    "thread.run.incomplete",
+    "thread.run.failed",
+    "thread.run.cancelling",
+    "thread.run.cancelled",
+    "thread.run.expired",
+  ]
+
   const observeRunStream = async (stream, controller) => {
     stream
-      .on("messageDelta", (delta) => {
-        controller.enqueue(
-          new TextEncoder().encode(JSON.stringify(delta) + "\n"),
-        )
+      .on("event", (evt) => {
+        console.log(evt.event)
+        if (eventsToForward.includes(evt.event)) {
+          controller.enqueue(
+            new TextEncoder().encode(JSON.stringify(evt) + "\n"),
+          )
+        }
       })
       .on("messageDone", (message) => {
         console.log("messageDone")

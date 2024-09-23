@@ -15,7 +15,9 @@ export default defineEventHandler(async (event) => {
   const openai = new OpenAI()
   const runs = []
 
-  for await (const run of openai.beta.threads.runs.list(project.threadId)) {
+  for await (const run of openai.beta.threads.runs.list(project.threadId, {
+    order: "asc",
+  })) {
     runs.push(run)
   }
 
