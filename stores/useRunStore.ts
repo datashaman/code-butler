@@ -12,7 +12,7 @@ export const useRunStore = defineStore("runs", () => {
     console.log(evt)
     const index = runs.value.findIndex((run) => run.id == evt.data.id)
 
-    if ($index !== -1) {
+    if (index !== -1) {
       runs.value[index] = evt.data
     } else {
       runs.value = [evt.data, ...runs.value]

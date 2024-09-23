@@ -36,7 +36,6 @@ export default defineEventHandler(async (event) => {
       .on("event", (evt) => {
         if (eventsToForward.includes(evt.event)) {
           const str = JSON.stringify(evt) + "\n"
-          console.log("forward:", str)
           controller.enqueue(new TextEncoder().encode(str))
         }
       })

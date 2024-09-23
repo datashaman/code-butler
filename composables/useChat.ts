@@ -108,30 +108,34 @@ export function useChat() {
           .trim()
           .split("\n")
           .forEach((evt) => {
-            const parsed = JSON.parse(evt)
-            switch (parsed.event) {
-              case "thread.message.delta":
-                const delta = parsed.data.delta
-                console.log(delta)
+            try {
+              const parsed = JSON.parse(evt)
+              switch (parsed.event) {
+                case "thread.message.delta":
+                  const delta = parsed.data.delta
+                  console.log(delta)
 
-                if (assistantContent.value === "...") {
-                  assistantContent.value = ""
-                }
+                  if (assistantContent.value === "...") {
+                    assistantContent.value = ""
+                  }
 
-                assistantContent.value += delta.content[0].text.value
-                scrollToBottom()
-                break
-              case "thread.run.created":
-              case "thread.run.queued":
-              case "thread.run.in_progress":
-              case "thread.run.requires_action":
-              case "thread.run.completed":
-              case "thread.run.incomplete":
-              case "thread.run.failed":
-              case "thread.run.cancelling":
-              case "thread.run.cancelled":
-              case "thread.run.expired":
-                runStore.handleEvent(parsed)
+                  assistantContent.value += delta.content[0].text.value
+                  scrollToBottom()
+                  break
+                case "thread.run.created":
+                case "thread.run.queued":
+                case "thread.run.in_progress":
+                case "thread.run.requires_action":
+                case "thread.run.completed":
+                case "thread.run.incomplete":
+                case "thread.run.failed":
+                case "thread.run.cancelling":
+                case "thread.run.cancelled":
+                case "thread.run.expired":
+                  runStore.handleEvent(parsed)
+              }
+            } catch (e) {
+              console.error("Error parsing event:", e)
             }
           })
       }

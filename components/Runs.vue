@@ -13,6 +13,8 @@ const humanDifference = (timestamp) => {
   return formatDistanceToNow(date, { addSuffix: true })
 }
 
+const cancellableStatuses = ["queued", "in_progress", "requires_action"]
+
 const runClass = (run) => {
   const type = {
     queued: "neutral",
@@ -27,6 +29,12 @@ const runClass = (run) => {
   }[run.status]
 
   return `bg-${type} text-${type}-content`
+}
+
+const cancelRun = async (runId) => {
+  await $fetch(`/api/projects/${props.projectId}/runs/${runId}/cancel`, {
+    method: "POST",
+  })
 }
 
 onMounted(() => {
@@ -46,6 +54,12 @@ onMounted(() => {
           <div class="flex justify-between">
             <span>{{ run.status }}</span>
             <span>created {{ humanDifference(run.created_at) }}</span>
+            <button
+              v-if="cancellableStatuses.includes(run.status)"
+              @click="cancelRun(run.id)"
+            >
+              <v-icon name="md-cancel" />
+            </button>
           </div>
         </div>
       </div>
