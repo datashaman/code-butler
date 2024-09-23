@@ -2,7 +2,7 @@ import type { Config } from "drizzle-kit"
 
 export default {
   dbCredentials: {
-      url: "./database/db.sqlite",
+    url: "./database/db.sqlite",
   },
   dialect: "sqlite",
   out: "./database/migrations",

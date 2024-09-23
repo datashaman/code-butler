@@ -6,10 +6,11 @@ The app is an interface to define assistants and projects.
 The AI assistants have access to file contents and can make changes to them (using OpenAI Function Calling).
 
 _code-butler..._
-* is a proof of concept
-* is a work in progress
-* **makes destructive changes to your project files**
-* **is not responsible for any data loss or corruption**
+
+- is a proof of concept
+- is a work in progress
+- **makes destructive changes to your project files**
+- **is not responsible for any data loss or corruption**
 
 **Use with caution and source control.**
 
@@ -17,10 +18,10 @@ _You do not have to point the assistant to your whole project directory. You can
 
 ## roadmap
 
-* [x] create project
-* [x] create assistant
-* [x] chat with assistant
-* [ ] undo changes
+- [x] create project
+- [x] create assistant
+- [x] chat with assistant
+- [ ] undo changes
 
 ## installation
 

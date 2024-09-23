@@ -116,9 +116,7 @@
       "indexes": {
         "projects_name_unique": {
           "name": "projects_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": true
         }
       },
