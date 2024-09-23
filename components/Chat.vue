@@ -133,16 +133,15 @@ const sendMessage = async (project, content: string, model: string) => {
         break
       }
 
-      value
+      const promises = value
         .trim()
         .split("\n")
-        .forEach((evt) => {
+        .map(async (evt) => {
           try {
             const parsed = JSON.parse(evt)
             switch (parsed.event) {
               case "thread.message.delta":
                 const delta = parsed.data.delta
-                console.log(delta)
 
                 if (assistantContent.value === "...") {
                   assistantContent.value = ""
@@ -161,12 +160,14 @@ const sendMessage = async (project, content: string, model: string) => {
               case "thread.run.cancelling":
               case "thread.run.cancelled":
               case "thread.run.expired":
-                handleRunEvent(parsed)
+                await handleRunEvent(parsed)
             }
           } catch (e) {
             console.error("Error parsing event:", e)
           }
         })
+
+      await Promise.all(promises)
     }
   } catch (err: any) {
     error.value = err.message || "Unknown error occurred"
@@ -236,7 +237,7 @@ const fetchRuns = async () => {
   }
 }
 
-const handleRunEvent = (evt) => {
+const handleRunEvent = async (evt) => {
   const index = runs.value.findIndex((run) => run.id == evt.data.id)
 
   if (index !== -1) {
@@ -295,7 +296,7 @@ const humanDifference = (timestamp) => {
   return formatDistanceToNow(date, { addSuffix: true })
 }
 
-const cancellableStatuses = ["queued", "in_progress", "requires_action"]
+const runningStatuses = ["queued", "in_progress", "requires_action"]
 
 const runClass = (run) => {
   const type = {
@@ -357,6 +358,25 @@ watch(
   { deep: true },
 )
 
+const newThread = async () => {
+  const confirmed = confirm(
+    "Are you sure you want to start a new thread? This will archive the current thread.",
+  )
+
+  if (!confirmed) return
+
+  const { thread } = await $fetch(`/api/threads`, {
+    method: "POST",
+  })
+
+  const attributes = project.value
+  attributes.threadId = thread.id
+  project.value = await projectStore.updateProject(props.projectId, attributes)
+
+  await fetchMessages(thread.id)
+  await fetchRuns()
+}
+
 onMounted(async () => {
   const modelValue = localStorage.getItem("activeModel")
 
@@ -371,7 +391,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="flex-1 flex flex-row">
-    <div class="flex flex-col bg-base-100 h-screen">
+    <div class="flex-1 flex flex-col bg-base-100 h-screen">
       <div class="navbar text-neutral z-10">
         <div class="navbar-start">
           <h2 class="font-bold text-xl pl-8">{{ project.name }}</h2>
@@ -408,6 +428,9 @@ onMounted(async () => {
                   </li>
                 </ul>
               </details>
+            </li>
+            <li>
+              <button btn="btn btn-error" @click="newThread">New Thread</button>
             </li>
           </ul>
         </div>
@@ -475,7 +498,7 @@ onMounted(async () => {
               </div>
               <span>created {{ humanDifference(run.created_at) }}</span>
               <button
-                v-if="cancellableStatuses.includes(run.status)"
+                v-if="runningStatuses.includes(run.status)"
                 @click="cancelRun(run.id)"
               >
                 <v-icon name="md-cancel" />
