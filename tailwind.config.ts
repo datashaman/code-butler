@@ -42,11 +42,9 @@ export default {
     ],
   },
   safelist: [
-    {
-      pattern: /btn-.*/,
-    },
-    {
-      pattern: /badge-.*/,
-    },
+    { pattern: /bg-.*/ },
+    { pattern: /btn-.*/ },
+    { pattern: /badge-.*/ },
+    { pattern: /text-.*/ },
   ],
 }

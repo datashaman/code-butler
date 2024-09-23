@@ -13,36 +13,21 @@ const humanDifference = (timestamp) => {
   return formatDistanceToNow(date, { addSuffix: true })
 }
 
-const statuses = [
-  "queued",
-  "in_progress",
-  "requires_action",
-  "cancelling",
-  "cancelled",
-  "failed",
-  "completed",
-  "incomplete",
-  "expired",
-]
-
-// DaisyUI semantic classes for run status
 const runClass = (run) => {
-  return (
-    "badge-" +
-    {
-      queued: "neutral",
-      in_progress: "primary",
-      requires_action: "warning",
-      cancelling: "warning",
-      cancelled: "error",
-      failed: "error",
-      completed: "success",
-      incomplete: "warning",
-      expired: "error",
-    }[run.status]
-  )
+  const type = {
+    queued: "neutral",
+    in_progress: "primary",
+    requires_action: "warning",
+    cancelling: "warning",
+    cancelled: "error",
+    failed: "error",
+    completed: "success",
+    incomplete: "warning",
+    expired: "error",
+  }[run.status]
+
+  return `bg-${type} text-${type}-content`
 }
-console.log(runClass({ status: "queued" }))
 </script>
 <template>
   <div class="px-4 py-6">
@@ -51,12 +36,15 @@ console.log(runClass({ status: "queued" }))
       <div
         v-for="run in runs"
         :key="run.id"
-        class="card card-compact rounded shadow bg-neutral-content text-neutral"
+        :class="'card card-compact rounded shadow ' + runClass(run)"
       >
         <div class="card-body">
           <div class="flex justify-between">
-            {{ humanDifference(run.created_at) }}
-            <div :class="'badge ' + runClass(run)">{{ run.status }}</div>
+            created {{ humanDifference(run.created_at) }}
+          </div>
+
+          <div class="card-actions">
+            {{ run.status }}
           </div>
         </div>
       </div>
