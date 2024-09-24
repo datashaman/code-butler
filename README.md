@@ -27,6 +27,7 @@ _You do not have to point the assistant to your whole project directory. You can
 - [ ] @mention - assistant mentions in chat
 - [ ] uploads - upload files to the assistant
 - [ ] project file tree - to select files for the AI to focus on
+- [ ] direct voice control - currently it transcripts voice to text which is sent to the assistant in two steps. make it one step.
 
 ## installation
 
