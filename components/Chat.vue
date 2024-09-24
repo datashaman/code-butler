@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { Marked } from "marked"
-import markedLinkifyIt from "marked-linkify-it"
-import DOMPurify from "isomorphic-dompurify"
-import { markedHighlight } from "marked-highlight"
+import markdownit from "markdown-it"
 import hljs from "highlight.js"
+import DOMPurify from "isomorphic-dompurify"
 import { formatDistanceToNow } from "date-fns"
+import "highlight.js/styles/base16/solarized-light.css"
 
 const props = defineProps({
   projectId: {
@@ -13,24 +12,32 @@ const props = defineProps({
   },
 })
 
-const marked = new Marked(
-  markedHighlight({
-    langPrefix: "hljs language-",
-    highlight(code, lang, info) {
-      const language = hljs.getLanguage(lang) ? lang : "plaintext"
-      return hljs.highlight(code, { language }).value
-    },
-  }),
-)
-
-marked
-  .use({
-    breaks: true,
-  })
-  .use(markedLinkifyIt())
-
 const renderMarkdown = (content) => {
-  const html = marked.parseInline(content)
+  const md = markdownit({
+    breaks: true,
+    highlight: (str, lang) => {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return (
+            '<pre><code class="hljs">' +
+            hljs.highlight(str, { language: lang, ignoreIllegals: true })
+              .value +
+            "</code></pre>"
+          )
+        } catch (e) {
+          console.error(e)
+        }
+      }
+
+      return (
+        '<pre><code class="hljs">' + md.utils.escapeHtml(str) + "</code></pre>"
+      )
+    },
+    html: true,
+    linkify: true,
+    typographer: true,
+  })
+  const html = md.render(content)
   return DOMPurify.sanitize(html)
 }
 
