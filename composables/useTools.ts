@@ -184,6 +184,15 @@ export const useTools = async (project) => {
         }
       })
     },
+    pullChanges: async () => {
+      return safelyRun(async () => {
+        await git.pull()
+
+        return {
+          success: true,
+        }
+      })
+    },
   }
 
   const tools = {
@@ -284,6 +293,13 @@ export const useTools = async (project) => {
       function: {
         name: "pushChanges",
         description: "Push the changes to the remote repository.",
+      },
+    },
+    pullChanges: {
+      type: "function",
+      function: {
+        name: "pullChanges",
+        description: "Pull the latest changes from the remote repository.",
       },
     },
     saveFile: {
