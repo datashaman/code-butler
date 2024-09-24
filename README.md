@@ -24,6 +24,9 @@ _You do not have to point the assistant to your whole project directory. You can
 - [x] undo changes - added simple git commit and revert
 - [x] project facts - AI managed project facts, used to prompt the assistant
 - [ ] run steps - UI for the run steps
+- [ ] @mention - assistant mentions in chat
+- [ ] uploads - upload files to the assistant
+- [ ] project file tree - to select files for the AI to focus on
 
 ## installation
 
