@@ -10,7 +10,7 @@ const emit = defineEmits(["message-sent"])
 
 const newMessage = ref("")
 
-const sendMessage = async (evt) => {
+const sendMessage = (evt) => {
   if (evt.shiftKey) return
   if (!newMessage.value) return
   evt.preventDefault()
@@ -27,8 +27,7 @@ const handleAudio = async (audio) => {
     body: formData,
   })
 
-  newMessage.value = transcription
-  sendMessage({}) // Automatically send the message after transcription
+  emit("message-sent", transcription)
 }
 </script>
 <template>
