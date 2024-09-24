@@ -37,6 +37,7 @@ const renderMarkdown = (content) => {
 const messages = ref<{ role: string; content: string }[]>([])
 const isLoading = ref(false)
 const error = ref<string | null>(null)
+const activeRun = ref(null)
 
 const messagesContainer = ref<HTMLElement | null>(null)
 
@@ -302,13 +303,7 @@ const cancelRun = async (runId) => {
   })
 }
 
-const handleSendMessage = async (evt) => {
-  if (evt.shiftKey) return
-  if (!newMessage.value) return
-  evt.preventDefault()
-  const content = newMessage.value + ""
-  newMessage.value = ""
-
+const handleSendMessage = async (content) => {
   await sendMessage(project.value, content, activeModel.value)
 }
 
@@ -343,6 +338,16 @@ const newThread = async () => {
 
   await fetchMessages(thread.id)
   await fetchRuns()
+}
+
+const setActiveRun = async (run) => {
+  const { data } = await $fetch(
+    `/api/projects/${props.projectId}/runs/${run.id}/steps`,
+  )
+
+  // TODO
+
+  activeRun.value = run
 }
 
 onMounted(async () => {
@@ -425,26 +430,11 @@ onMounted(async () => {
         </template>
       </div>
 
-      <div class="w-2/3 mx-auto">
-        <div class="flex flex-row p-4 gap-2 w-full">
-          <div class="flex-grow">
-            <textarea
-              v-model="newMessage"
-              type="text"
-              class="textarea bg-base-200 w-full"
-              placeholder="Type your message here..."
-              rows="1"
-              @keyup.enter="handleSendMessage"
-            />
-          </div>
-          <button class="btn-circle ml-2" @click="handleSendMessage">
-            <v-icon
-              scale="2"
-              name="bi-arrow-up-circle-fill"
-              class="text-base-300"
-            />
-          </button>
-        </div>
+      <div class="w-full xl:w-2/3 mx-auto">
+        <ChatInput
+          :projectId="props.projectId"
+          @message-sent="handleSendMessage"
+        />
       </div>
     </div>
 
@@ -457,21 +447,19 @@ onMounted(async () => {
         <div
           v-for="run in runs"
           :key="run.id"
-          :class="'card card-compact rounded shadow ' + runClass(run)"
+          :class="'p-2 rounded shadow ' + runClass(run)"
         >
-          <div class="card-body">
-            <div class="flex justify-between">
-              <div class="tooltip" :data-tip="run.status">
-                <v-icon :name="runIcon(run)" />
-              </div>
-              <span>created {{ humanDifference(run.created_at) }}</span>
-              <button
-                v-if="runningStatuses.includes(run.status)"
-                @click="cancelRun(run.id)"
-              >
-                <v-icon name="md-cancel" />
-              </button>
+          <div class="flex justify-between" @click="setActiveRun(run)">
+            <div class="tooltip" :data-tip="run.status">
+              <v-icon :name="runIcon(run)" />
             </div>
+            <span>created {{ humanDifference(run.created_at) }}</span>
+            <button
+              v-if="runningStatuses.includes(run.status)"
+              @click="cancelRun(run.id)"
+            >
+              <v-icon name="md-cancel" />
+            </button>
           </div>
         </div>
       </div>

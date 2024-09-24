@@ -1,8 +1,10 @@
 import { OhVueIcon, addIcons } from "oh-vue-icons"
 import {
   BiArrowUpCircleFill,
+  BiCircleFill,
   BiPencilSquare,
   BiPlusSquare,
+  IoMicCircle,
   MdCancel,
   OiSidebarCollapse,
   OiSidebarExpand,
@@ -41,8 +43,10 @@ addIcons(
   OiSidebarExpand,
   OiSidebarCollapse,
   BiArrowUpCircleFill,
+  BiCircleFill,
   BiPencilSquare,
   BiPlusSquare,
+  IoMicCircle,
   MdCancel,
 )
 
