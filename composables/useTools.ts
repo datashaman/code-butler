@@ -56,6 +56,21 @@ export const useTools = async (project) => {
         }
       })
     },
+    setProjectFacts: async ({ facts }) => {
+      return safelyRun(async () => {
+        useDB()
+          .update(tables.projects)
+          .set({
+            facts,
+          })
+          .where(eq(tables.projects.id, project.id))
+          .run()
+
+        return {
+          success: true,
+        }
+      })
+    },
     addProjectFact: async ({ fact }) => {
       return safelyRun(async () => {
         const project = await getProject()
@@ -174,6 +189,26 @@ export const useTools = async (project) => {
       function: {
         name: "getProjectFacts",
         description: "Get the facts of the project",
+      },
+    },
+    setProjectFacts: {
+      type: "function",
+      function: {
+        name: "setProjectFacts",
+        description: "Set the facts of the project",
+        parameters: {
+          type: "object",
+          properties: {
+            facts: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+            },
+          },
+          required: ["facts"],
+          additionalProperties: false,
+        },
       },
     },
     addProjectFact: {

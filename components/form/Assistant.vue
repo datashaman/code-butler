@@ -21,6 +21,7 @@ const availableTools = [
   "commitChanges",
   "undoChanges",
   "getProjectFacts",
+  "setProjectFacts",
   "addProjectFact",
   "removeProjectFact",
 ]
