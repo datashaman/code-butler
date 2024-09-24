@@ -193,6 +193,16 @@ export const useTools = async (project) => {
         }
       })
     },
+    showDiff: async () => {
+      return safelyRun(async () => {
+        const diff = await git.diff()
+
+        return {
+          success: true,
+          diff,
+        }
+      })
+    },
   }
 
   const tools = {
@@ -300,6 +310,13 @@ export const useTools = async (project) => {
       function: {
         name: "pullChanges",
         description: "Pull the latest changes from the remote repository.",
+      },
+    },
+    showDiff: {
+      type: "function",
+      function: {
+        name: "showDiff",
+        description: "Show the differences between the working directory and the index.",
       },
     },
     saveFile: {

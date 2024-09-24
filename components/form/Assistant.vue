@@ -24,6 +24,9 @@ const availableTools = [
   "setProjectFacts",
   "addProjectFact",
   "removeProjectFact",
+  "pushChanges",
+  "pullChanges",
+  "showDiff",
 ]
 
 const model = ref("")
