@@ -29,6 +29,12 @@ export default defineEventHandler(async (event) => {
     "thread.run.cancelling",
     "thread.run.cancelled",
     "thread.run.expired",
+    "thread.run.step.created",
+    "thread.run.step.in_progress",
+    "thread.run.step.completed",
+    "thread.run.step.failed",
+    "thread.run.step.cancelled",
+    "thread.run.step.expired",
   ]
 
   const observeRunStream = async (stream, controller) => {
@@ -88,8 +94,7 @@ export default defineEventHandler(async (event) => {
       const facts = project.facts || []
       const params = {
         ...(await readBody(event)),
-        additional_instructions:
-          project.description + "\n\nProject Facts: " + facts.join("\n"),
+        additional_instructions: project.description + "\n\nProject Facts: " + facts.join("\n"),
         assistant_id: project.assistantId,
         tools: tools.allTools(),
       }
