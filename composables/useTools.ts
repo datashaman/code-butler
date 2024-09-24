@@ -100,7 +100,7 @@ export const useTools = async (project) => {
     },
     undoChanges: async () => {
       return safelyRun(async () => {
-        await git.reset(["--hard", "HEAD^"])
+        await git.revert("HEAD")
 
         return {
           success: true,
