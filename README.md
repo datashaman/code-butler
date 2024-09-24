@@ -16,6 +16,17 @@ _code-butler..._
 
 _You do not have to point the assistant to your whole project directory. You can point it to a subdirectory, focusing on just components (for example). It is up to you to decide how much access you want to give the assistant. Less is better, less room to make mistakes._
 
+## table of contents
+
+- [roadmap](#roadmap)
+- [installation](#installation)
+- [configuration](#configuration)
+- [database migration](#database-migration)
+- [ssl certificate](#ssl-certificate)
+- [development](#development)
+- [prompts](#prompts)
+- [architecture](#architecture)
+
 ## roadmap
 
 - [x] create project
@@ -66,7 +77,7 @@ Edit the `.env` file and set `OPENAI_API_KEY` to your OpenAI API key.
 This creates and migrates a _SQLite_ database `database/db.sqlite`:
 
 ```bash
-yarn db:migrate
+ yran db:migrate
 ```
 
 ## ssl certificate
