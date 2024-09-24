@@ -2,7 +2,6 @@
 import markdownit from "markdown-it"
 import hljs from "highlight.js"
 import DOMPurify from "isomorphic-dompurify"
-import { formatDistanceToNow } from "date-fns"
 import "highlight.js/styles/base16/solarized-light.css"
 
 const props = defineProps({
@@ -267,49 +266,6 @@ const scrollRuns = () => {
 await fetchMessages(project.value.threadId)
 await fetchRuns()
 
-const humanDifference = (timestamp) => {
-  const date = new Date(timestamp * 1000)
-  return formatDistanceToNow(date, { addSuffix: true })
-}
-
-const runningStatuses = ["queued", "in_progress", "requires_action"]
-
-const runClass = (run) => {
-  const type = {
-    queued: "neutral",
-    in_progress: "primary",
-    requires_action: "warning",
-    cancelling: "warning",
-    cancelled: "error",
-    failed: "error",
-    completed: "success",
-    incomplete: "warning",
-    expired: "error",
-  }[run.status]
-
-  return `bg-${type} text-${type}-content`
-}
-
-const runIcon = (run) => {
-  return {
-    queued: "hi-clock",
-    in_progress: "hi-refresh",
-    requires_action: "hi-exclamation",
-    cancelling: "hi-ban",
-    cancelled: "hi-x-circle",
-    failed: "hi-x",
-    completed: "hi-check-circle",
-    incomplete: "hi-minus-circle",
-    expired: "fa-regular-hourglass",
-  }[run.status]
-}
-
-const cancelRun = async (runId) => {
-  await $fetch(`/api/projects/${props.projectId}/runs/${runId}/cancel`, {
-    method: "POST",
-  })
-}
-
 const handleSendMessage = async (content) => {
   await sendMessage(project.value, content, activeModel.value)
 }
@@ -455,24 +411,13 @@ onMounted(async () => {
         class="flex-1 flex flex-col gap-2 overflow-y-auto"
         ref="runsContainer"
       >
-        <div
+        <Run
           v-for="run in runs"
+          :projectId="projectId"
+          :run="run"
           :key="run.id"
-          :class="'p-2 rounded shadow ' + runClass(run)"
-        >
-          <div class="flex justify-between" @click="setActiveRun(run)">
-            <div class="tooltip" :data-tip="run.status">
-              <v-icon :name="runIcon(run)" />
-            </div>
-            <span>created {{ humanDifference(run.created_at) }}</span>
-            <button
-              v-if="runningStatuses.includes(run.status)"
-              @click="cancelRun(run.id)"
-            >
-              <v-icon name="md-cancel" />
-            </button>
-          </div>
-        </div>
+          @active-run-set="setActiveRun"
+        />
       </div>
     </div>
   </div>
