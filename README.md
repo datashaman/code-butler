@@ -98,7 +98,7 @@ This will start the server at [https://localhost:3000](https://localhost:3000).
 There should be no warning about the certificate. If there is, ensure you added the certificate authority to the system trust store as decribed above.
 
 ```bash
-mkcert install
+mkcert -install
 ```
 
 ## prompts

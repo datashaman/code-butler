@@ -20,7 +20,7 @@ const facts = ref("")
 const errors = ref({})
 
 const handleValidationError = (e) => {
-  console.dir(e)
+  const { response } = e
   if (response.status === 400) {
     const issues = response._data.data.issues
     errors.value = issues.reduce((acc, issue) => {
