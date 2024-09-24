@@ -39,6 +39,7 @@
     "oh-vue-icons": "^1.0.0-rc3",
     "openai": "^4.62.1",
     "prettier": "^3.3.3",
+    "simplegit": "^1.0.2",
     "zod": "^3.23.8"
   }
 }
