@@ -2,8 +2,9 @@ import OpenAI from "openai"
 import { useValidatedParams, useValidatedBody, z, zh } from "h3-zod"
 
 export default defineEventHandler(async (event) => {
-  const { projectId } = await useValidatedParams(event, {
+  const { projectId, runId } = await useValidatedParams(event, {
     projectId: zh.intAsString,
+    runId: z.string(),
   })
 
   const project = useDB()
@@ -13,14 +14,17 @@ export default defineEventHandler(async (event) => {
     .get()
 
   const openai = new OpenAI()
-  const runs = []
+  const steps = []
 
-  for await (const run of openai.beta.threads.runs.list(project.threadId, {
-    order: "asc",
-  })) {
-    run.tools = run.tools.map((tool) => tool.function.name)
-    runs.push(run)
+  for await (const step of openai.beta.threads.runs.steps.list(
+    project.threadId,
+    runId,
+    {
+      order: "asc",
+    },
+  )) {
+    steps.push(step)
   }
 
-  return { runs }
+  return { steps }
 })

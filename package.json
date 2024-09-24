@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --https --ssl-key ./certs/localhost-key.pem --ssl-cert ./certs/localhost.pem",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -25,9 +25,11 @@
   "packageManager": "yarn@4.5.0+sha512.837566d24eec14ec0f5f1411adb544e892b3454255e61fdef8fd05f3429480102806bac7446bc9daff3896b01ae4b62d00096c7e989f1596f2af10b927532f39",
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.11",
+    "@types/formidable": "^3",
     "daisyui": "^4.12.10",
     "date-fns": "^4.1.0",
     "drizzle-kit": "0.22.8",
+    "formidable": "^3.5.1",
     "h3": "^1.12.0",
     "h3-zod": "^0.5.3",
     "highlight.js": "^11.10.0",
