@@ -1,5 +1,6 @@
 import { promises as fs } from "fs"
 import { join } from "path"
+import { simpleGit, SimpleGit } from "simple-git"
 
 const safelyRun = async (fn) => {
   try {
@@ -21,6 +22,10 @@ const getFile = ({ path }) => {
 }
 
 export const useTools = async (project) => {
+  const git: SimpleGit = simpleGit({
+    baseDir: project.path,
+  })
+
   const normalizePath = (path) => {
     return join(project.path, path)
   }
@@ -83,6 +88,25 @@ export const useTools = async (project) => {
         }
       })
     },
+    commitChanges: async ({ message }) => {
+      return safelyRun(async () => {
+        await git.add(".")
+        await git.commit(message)
+
+        return {
+          success: true,
+        }
+      })
+    },
+    undoChanges: async () => {
+      return safelyRun(async () => {
+        await git.reset(["--hard", "HEAD^"])
+
+        return {
+          success: true,
+        }
+      })
+    },
   }
 
   const tools = {
@@ -90,6 +114,31 @@ export const useTools = async (project) => {
       type: "function",
       function: {
         name: "getCurrentTime",
+      },
+    },
+    commitChanges: {
+      type: "function",
+      function: {
+        name: "commitChanges",
+        description:
+          "Commit all changes in the project, including deleted files and directories",
+        parameters: {
+          type: "object",
+          properties: {
+            message: {
+              type: "string",
+            },
+          },
+          required: ["message"],
+          additionalProperties: false,
+        },
+      },
+    },
+    undoChanges: {
+      type: "function",
+      function: {
+        name: "undoChanges",
+        description: "Undo the latest change.",
       },
     },
     saveFile: {
