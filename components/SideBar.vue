@@ -24,7 +24,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div v-if="open" class="bg-base-200 h-full">
+  <div v-if="open" class="bg-base-200 h-full pt-2">
     <ul class="menu">
       <li>
         <nuxt-link to="/assistants/create">
@@ -60,7 +60,7 @@ onMounted(async () => {
 </template>
 <style scoped>
 h2 {
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--fallback-bc, oklch(var(--bc) / 0.4));
   line-height: 1.25rem;

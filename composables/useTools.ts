@@ -1,6 +1,17 @@
 import { promises as fs } from "fs"
 import { join } from "path"
 
+const safelyRun = async (fn) => {
+  try {
+    return await fn()
+  } catch (e) {
+    return {
+      success: false,
+      error: e.message,
+    }
+  }
+}
+
 const getFile = ({ path }) => {
   const file = files.find((file) => file.path === path)
   if (!file) {
@@ -17,82 +28,60 @@ export const useTools = async (project) => {
   const functions = {
     getCurrentTime: () => {
       return {
+        success: true,
         time: new Date().toLocaleTimeString(),
       }
     },
     saveFile: async ({ path, contents }) => {
-      try {
+      return safelyRun(async () => {
         await fs.writeFile(normalizePath(path), contents)
 
         return {
           success: true,
         }
-      } catch (e) {
-        return {
-          success: false,
-          error: e.message,
-        }
-      }
+      })
     },
     listFiles: async ({ path }) => {
-      path = path || "/"
+      path = normalizePath(path || "/")
 
-      try {
-        const files = await fs.readdir(normalizePath(path))
+      return safelyRun(async () => {
+        const files = await fs.readdir(path)
 
-        return {
-          success: true,
-          files,
-        }
-      } catch (e) {
-        return {
-          success: false,
-          error: e.message,
-        }
-      }
+        return files.map((file) => {
+          return {
+            name: file,
+            type: "file",
+          }
+        })
+      })
     },
     moveFile: async ({ from, to }) => {
-      try {
+      return safelyRun(async () => {
         await fs.rename(normalizePath(from), normalizePath(to))
 
         return {
           success: true,
         }
-      } catch (e) {
-        return {
-          success: false,
-          error: e.message,
-        }
-      }
+      })
     },
     removeFile: async ({ path }) => {
-      try {
+      return safelyRun(async () => {
         await fs.unlink(normalizePath(path))
 
         return {
           success: true,
         }
-      } catch (e) {
-        return {
-          success: false,
-          error: e.message,
-        }
-      }
+      })
     },
     getFileContents: async ({ path }) => {
-      try {
+      return safelyRun(async () => {
         const contents = await fs.readFile(normalizePath(path), "utf-8")
 
         return {
           success: true,
           contents,
         }
-      } catch (e) {
-        return {
-          success: false,
-          error: e.message,
-        }
-      }
+      })
     },
   }
 

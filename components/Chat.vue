@@ -368,7 +368,7 @@ onMounted(async () => {
       <div class="navbar text-neutral z-10">
         <div class="navbar-start">
           <h2 class="font-bold text-xl pl-8">{{ project.name }}</h2>
-          <ul class="menu menu-horizontal px-1">
+          <ul class="menu menu-xs menu-horizontal px-1 py-0">
             <li>
               <details ref="modelDetails">
                 <summary>
@@ -438,8 +438,12 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="flex flex-col h-screen px-4 py-6 w-1/3">
-      <h1 class="font-bold text-xl pb-4">Runs</h1>
+    <div class="flex flex-col h-screen w-1/3 pr-6">
+      <div class="navbar">
+        <div class="navbar-start">
+          <h2 class="font-bold text-xl pb-4 pt-3">Runs</h2>
+        </div>
+      </div>
       <div
         class="flex-1 flex flex-col gap-2 overflow-y-auto"
         ref="runsContainer"
