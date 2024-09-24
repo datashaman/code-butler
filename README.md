@@ -62,6 +62,29 @@ This creates and migrates a _SQLite_ database `database/db.sqlite`:
 yarn db:migrate
 ```
 
+## ssl certificate
+
+The app requires an SSL certificate for the voice input to work.
+
+First install `mkcert`:
+
+```bash
+brew install mkcert
+```
+
+Add the certificate authority to the system trust store:
+
+```bash
+mkcert -install
+```
+
+Then generate the certificate:
+
+```bash
+cd certs
+mkcert localhost
+```
+
 ## development
 
 Start the development server:
@@ -70,7 +93,13 @@ Start the development server:
 yarn dev
 ```
 
-This will start the server at [http://localhost:3000](http://localhost:3000).
+This will start the server at [https://localhost:3000](https://localhost:3000).
+
+There should be no warning about the certificate. If there is, ensure you added the certificate authority to the system trust store as decribed above.
+
+```bash
+mkcert install
+```
 
 ## prompts
 
