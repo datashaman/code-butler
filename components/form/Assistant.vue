@@ -18,6 +18,8 @@ const availableTools = [
   "moveFile",
   "removeFile",
   "getFileContents",
+  "commitChanges",
+  "undoChanges",
 ]
 
 const model = ref("")
