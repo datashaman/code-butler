@@ -20,6 +20,9 @@ const availableTools = [
   "getFileContents",
   "commitChanges",
   "undoChanges",
+  "getProjectFacts",
+  "addProjectFact",
+  "removeProjectFact",
 ]
 
 const model = ref("")

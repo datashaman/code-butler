@@ -8,6 +8,7 @@ export const projects = sqliteTable("projects", {
   path: text("path").notNull(),
   threadId: text("thread_id").notNull(),
   assistantId: text("assistant_id").notNull(),
+  facts: text("facts", { mode: "json" }).notNull().default("[]"),
   createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 })
 

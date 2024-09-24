@@ -15,11 +15,12 @@ const name = ref("")
 const path = ref("")
 const assistantId = ref("")
 const description = ref("")
+const facts = ref("")
 
 const errors = ref({})
 
 const handleValidationError = (e) => {
-  const { response } = e
+  console.dir(e)
   if (response.status === 400) {
     const issues = response._data.data.issues
     errors.value = issues.reduce((acc, issue) => {
@@ -43,6 +44,7 @@ if (props.projectId) {
   path.value = project.path
   assistantId.value = project.assistantId
   description.value = project.description
+  facts.value = project.facts
 }
 
 const makeProject = () => ({
@@ -50,6 +52,7 @@ const makeProject = () => ({
   path: path.value,
   assistantId: assistantId.value,
   description: description.value,
+  facts: facts.value,
 })
 
 const createProject = async () => {
@@ -155,6 +158,16 @@ const deleteProject = async () => {
         />
         <div v-if="errors.description" class="label">
           <div class="label-text-alt text-error">{{ errors.description }}</div>
+        </div>
+      </div>
+
+      <div class="form-control w-full">
+        <div class="label">
+          <div class="label-text">Facts</div>
+        </div>
+        <textarea class="textarea textarea-bordered w-full" v-model="facts" />
+        <div v-if="errors.facts" class="label">
+          <div class="label-text-alt text-error">{{ errors.facts }}</div>
         </div>
       </div>
 

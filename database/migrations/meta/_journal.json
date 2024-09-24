@@ -29,6 +29,27 @@
       "when": 1727055470437,
       "tag": "0003_dark_ezekiel_stane",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1727171979757,
+      "tag": "0004_classy_speedball",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1727173302800,
+      "tag": "0005_fair_black_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1727173392297,
+      "tag": "0006_nifty_zemo",
+      "breakpoints": true
     }
   ]
 }

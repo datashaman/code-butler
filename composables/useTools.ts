@@ -30,12 +30,66 @@ export const useTools = async (project) => {
     return join(project.path, path)
   }
 
+  const getProject = async () => {
+    return useDB()
+      .select()
+      .from(tables.projects)
+      .where(eq(tables.projects.id, project.id))
+      .limit(1)
+      .get()
+  }
+
   const functions = {
     getCurrentTime: () => {
       return {
         success: true,
         time: new Date().toLocaleTimeString(),
       }
+    },
+    getProjectFacts: async () => {
+      return safelyRun(async () => {
+        const project = await getProject()
+
+        return {
+          success: true,
+          facts: project.facts,
+        }
+      })
+    },
+    addProjectFact: async ({ fact }) => {
+      return safelyRun(async () => {
+        const project = await getProject()
+        console.log("facts", project.facts)
+
+        useDB()
+          .update(tables.projects)
+          .set({
+            facts: [...project.facts, fact],
+          })
+          .where(eq(tables.projects.id, project.id))
+          .run()
+
+        return {
+          success: true,
+        }
+      })
+    },
+    removeProjectFact: async ({ fact }) => {
+      return safelyRun(async () => {
+        const project = await getProject()
+
+        useDB()
+          .update(tables.projects)
+          .set({
+            facts: project.facts.filter((f) => f !== fact),
+          })
+          .where(eq(tables.projects.id, project.id))
+          .run()
+
+        return {
+          success: true,
+        }
+      })
     },
     saveFile: async ({ path, contents }) => {
       return safelyRun(async () => {
@@ -114,6 +168,47 @@ export const useTools = async (project) => {
       type: "function",
       function: {
         name: "getCurrentTime",
+      },
+    },
+    getProjectFacts: {
+      type: "function",
+      function: {
+        name: "getProjectFacts",
+        description: "Get the facts of the project",
+      },
+    },
+    addProjectFact: {
+      type: "function",
+      function: {
+        name: "addProjectFact",
+        description: "Add a fact to the project",
+        parameters: {
+          type: "object",
+          properties: {
+            fact: {
+              type: "string",
+            },
+          },
+          required: ["fact"],
+          additionalProperties: false,
+        },
+      },
+    },
+    removeProjectFact: {
+      type: "function",
+      function: {
+        name: "removeProjectFact",
+        description: "Remove a fact from the project",
+        parameters: {
+          type: "object",
+          properties: {
+            fact: {
+              type: "string",
+            },
+          },
+          required: ["fact"],
+          additionalProperties: false,
+        },
       },
     },
     commitChanges: {
@@ -261,11 +356,7 @@ export const useTools = async (project) => {
       response,
     }
 
-    const action = useDB()
-      .insert(tables.actions)
-      .values(attributes)
-      .returning()
-      .get()
+    useDB().insert(tables.actions).values(attributes).execute()
 
     return response
   }
