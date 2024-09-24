@@ -28,6 +28,7 @@ _You do not have to point the assistant to your whole project directory. You can
 - [ ] uploads - upload files to the assistant
 - [ ] project file tree - to select files for the AI to focus on
 - [ ] direct voice control - currently it transcribes voice to text, which the user sends. It should send the text directly to the assistant on transcription.
+- [ ] ignore files - list of files/folders which the assistant should ignore and will not be returned in the file tree (for example `node_modules` or `vendor`)
 
 ## installation
 
