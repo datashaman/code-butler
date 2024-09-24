@@ -21,7 +21,9 @@ _You do not have to point the assistant to your whole project directory. You can
 - [x] create project
 - [x] create assistant
 - [x] chat with assistant
-- [ ] undo changes
+- [x] undo changes - added simple git commit and revert
+- [x] project facts - AI managed project facts, used to prompt the assistant
+- [ ] run steps - UI for the run steps
 
 ## installation
 
