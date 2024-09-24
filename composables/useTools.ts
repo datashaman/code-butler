@@ -59,7 +59,6 @@ export const useTools = async (project) => {
     addProjectFact: async ({ fact }) => {
       return safelyRun(async () => {
         const project = await getProject()
-        console.log("facts", project.facts)
 
         useDB()
           .update(tables.projects)
