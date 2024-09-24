@@ -175,6 +175,15 @@ export const useTools = async (project) => {
         }
       })
     },
+    pushChanges: async () => {
+      return safelyRun(async () => {
+        await git.push()
+
+        return {
+          success: true,
+        }
+      })
+    },
   }
 
   const tools = {
@@ -268,6 +277,13 @@ export const useTools = async (project) => {
       function: {
         name: "undoChanges",
         description: "Undo the latest change.",
+      },
+    },
+    pushChanges: {
+      type: "function",
+      function: {
+        name: "pushChanges",
+        description: "Push the changes to the remote repository.",
       },
     },
     saveFile: {
