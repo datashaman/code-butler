@@ -77,7 +77,7 @@ Edit the `.env` file and set `OPENAI_API_KEY` to your OpenAI API key.
 This creates and migrates a _SQLite_ database `database/db.sqlite`:
 
 ```bash
- yran db:migrate
+ yarn db:migrate
 ```
 
 ## ssl certificate
