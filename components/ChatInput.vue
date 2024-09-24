@@ -28,6 +28,7 @@ const handleAudio = async (audio) => {
   })
 
   newMessage.value = transcription
+  sendMessage({}) // Automatically send the message after transcription
 }
 </script>
 <template>
