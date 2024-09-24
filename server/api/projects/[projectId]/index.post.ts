@@ -85,12 +85,11 @@ export default defineEventHandler(async (event) => {
 
   const stream = new ReadableStream({
     async start(controller) {
+      const facts = project.facts || []
       const params = {
         ...(await readBody(event)),
         additional_instructions:
-          project.description +
-          "\n\nProject Facts: " +
-          project.facts.join("\n"),
+          project.description + "\n\nProject Facts: " + facts.join("\n"),
         assistant_id: project.assistantId,
         tools: tools.allTools(),
       }
