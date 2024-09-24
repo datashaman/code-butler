@@ -25,22 +25,6 @@ const parseForm = async (
   })
 }
 
-const mimeToExtensionMap = {
-  "audio/flac": "flac",
-  "audio/mpeg": "mp3",
-  "audio/mp4": "m4a",
-  "audio/mpeg": "mpeg",
-  "audio/mpga": "mpga",
-  "audio/ogg": "ogg",
-  "audio/wav": "wav",
-  "audio/webm": "webm",
-}
-
-const getFileExtensionFromMimeType = (mimeType) => {
-  const [type] = mimeType.split(";")
-  return mimeToExtensionMap[type] || "bin" // Default to 'bin' if unknown type
-}
-
 export default defineEventHandler(async (event) => {
   const { projectId } = await useValidatedParams(event, {
     projectId: zh.intAsString,
@@ -61,8 +45,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const { file } = await parseForm(event.node.req)
-  const newFilename =
-    file[0].filepath + "." + getFileExtensionFromMimeType(file[0].mimetype)
+  const newFilename = `${file[0].filepath}.ogg`
   await fs.promises.rename(file[0].filepath, newFilename)
   const fileStream = fs.createReadStream(newFilename)
 
