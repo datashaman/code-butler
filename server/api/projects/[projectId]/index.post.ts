@@ -87,7 +87,10 @@ export default defineEventHandler(async (event) => {
     async start(controller) {
       const params = {
         ...(await readBody(event)),
-        additional_instructions: project.description,
+        additional_instructions:
+          project.description +
+          "\n\nProject Facts: " +
+          project.facts.join("\n"),
         assistant_id: project.assistantId,
         tools: tools.allTools(),
       }

@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
     .select()
     .from(tables.projects)
     .where(eq(tables.projects.id, projectId))
+    .limit(1)
     .get()
 
   const openai = new OpenAI()
