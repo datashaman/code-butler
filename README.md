@@ -38,8 +38,9 @@ _You do not have to point the assistant to your whole project directory. You can
 - [ ] @mention - assistant mentions in chat
 - [ ] uploads - upload files to the assistant
 - [ ] project file tree - to select files for the AI to focus on
-- [ ] direct voice control - currently it transcribes voice to text, which the user sends. It should send the text directly to the assistant on transcription.
+- [x] direct voice control - currently it transcribes voice to text, which the user sends. It should send the text directly to the assistant on transcription.
 - [ ] ignore files - list of files/folders which the assistant should ignore and will not be returned in the file tree (for example `node_modules` or `vendor`)
+- [ ] continuous voice control - it now posts the message automatically, but it would be neat to have it always-on with idle timeout
 
 ## installation
 
