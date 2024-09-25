@@ -1,5 +1,5 @@
 <script setup>
-const sidebarOpen = ref(false)
+const sidebarOpen = ref(true)
 
 const setSidebarState = (state) => {
   sidebarOpen.value = state
