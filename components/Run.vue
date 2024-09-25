@@ -55,7 +55,6 @@ const runStepClass = (step) => {
 const runIcon = (run) => {
   return {
     queued: "hi-clock",
-    in_progress: "hi-refresh",
     requires_action: "hi-exclamation",
     cancelling: "hi-ban",
     cancelled: "hi-x-circle",
@@ -68,7 +67,6 @@ const runIcon = (run) => {
 
 const runStepIcon = (step) => {
   return {
-    in_progress: "hi-refresh",
     cancelled: "hi-x-circle",
     failed: "hi-x",
     completed: "hi-check-circle",
@@ -122,7 +120,11 @@ await fetchSteps()
     >
       <div class="flex justify-between">
         <div class="tooltip" :data-tip="run.status">
-          <v-icon :name="runIcon(run)" />
+          <span
+            v-if="run.status === 'in_progress'"
+            class="loading loading-sm loading-spinner"
+          />
+          <v-icon v-else :name="runIcon(run)" />
         </div>
         <span v-if="run.status === 'completed'">
           completed {{ humanDifference(run.completed_at) }}
@@ -150,7 +152,11 @@ await fetchSteps()
     >
       <div v-for="step in steps" :key="step.id">
         <div :class="'flex justify-between ' + runStepClass(step)">
-          <v-icon :name="runStepIcon(step)" />
+          <span
+            v-if="step.status === 'in_progress'"
+            class="loading loading-sm loading-spinner"
+          />
+          <v-icon v-else :name="runStepIcon(step)" />
           <span v-if="run.status === 'completed'">
             completed {{ humanDifference(run.completed_at) }}
           </span>
