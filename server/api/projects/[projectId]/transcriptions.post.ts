@@ -53,8 +53,13 @@ export default defineEventHandler(async (event) => {
     model: "whisper-1",
     file: fileStream,
     prompt:
-      project.description + "\n\nProject Facts: " + project.facts.join("\n"),
+      project.description +
+      "\n\nProject Facts: " +
+      project.facts.map((fact) => `- ${fact}`).join("\n") +
+      "\n\nUse the above information to help interpret the audio and provide a transcription.",
   }
+
+  console.log(params)
 
   const transcription = await openai.audio.transcriptions.create(params)
 

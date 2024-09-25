@@ -92,12 +92,25 @@ export default defineEventHandler(async (event) => {
   const stream = new ReadableStream({
     async start(controller) {
       const facts = project.facts || []
+
+      const body = await readBody(event)
+
+      body.additional_instructions ??= ""
+      body.additional_instructions = (
+        project.description +
+        "\n\nProject Facts: " +
+        facts.map((fact) => `- ${fact}`).join("\n") +
+        "\n\n" +
+        body.additional_instructions
+      ).trim()
+
       const params = {
-        ...(await readBody(event)),
-        additional_instructions: project.description + "\n\nProject Facts: " + facts.join("\n"),
+        ...body,
         assistant_id: project.assistantId,
         tools: tools.allTools(),
       }
+
+      console.log(params)
 
       const stream = openai.beta.threads.runs.stream(project.threadId, params)
 
