@@ -26,6 +26,24 @@ const parseForm = async (
 }
 
 export default defineEventHandler(async (event) => {
+  const { projectId } = await useValidatedParams(event, {
+    projectId: zh.intAsString,
+  })
+
+  const project = useDB()
+    .select()
+    .from(tables.projects)
+    .where(eq(tables.projects.id, projectId))
+    .limit(1)
+    .get()
+
+  if (!project) {
+    throw createError({
+      statusCode: 404,
+      message: "Project not found",
+    })
+  }
+
   const { file } = await parseForm(event.node.req)
   const newFilename = `${file[0].filepath}.ogg`
   await fs.promises.rename(file[0].filepath, newFilename)
@@ -34,6 +52,8 @@ export default defineEventHandler(async (event) => {
   const params = {
     model: "whisper-1",
     file: fileStream,
+    prompt:
+      project.description + "\n\nProject Facts: " + project.facts.join("\n"),
   }
 
   const transcription = await openai.audio.transcriptions.create(params)

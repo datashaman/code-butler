@@ -22,10 +22,13 @@ const handleAudio = async (audio) => {
   const formData = new FormData()
   formData.append("file", audio)
 
-  const { transcription } = await $fetch(`/api/transcriptions`, {
-    method: "POST",
-    body: formData,
-  })
+  const { transcription } = await $fetch(
+    `/api/projects/${props.projectId}/transcriptions`,
+    {
+      method: "POST",
+      body: formData,
+    },
+  )
 
   emit("message-sent", transcription)
 }
