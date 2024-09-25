@@ -77,25 +77,23 @@ const scrollMessages = () => {
   })
 }
 
-const sendMessage = async (project, model: string, content: string = "") => {
+const sendMessage = async (project, content: string, model: string) => {
   isLoading.value = true
   error.value = null
 
-  if (content) {
-    messages.value.push({
-      role: "user",
-      content: [
-        {
-          type: "text",
-          text: {
-            value: content,
-          },
+  messages.value.push({
+    role: "user",
+    content: [
+      {
+        type: "text",
+        text: {
+          value: content,
         },
-      ],
-    })
+      },
+    ],
+  })
 
-    scrollMessages()
-  }
+  scrollMessages()
 
   const assistantContent = ref("...")
 
@@ -114,19 +112,14 @@ const sendMessage = async (project, model: string, content: string = "") => {
   scrollMessages()
 
   try {
-    const body = content
-      ? {
-          additional_messages: [
-            {
-              role: "user",
-              content,
-            },
-          ],
-        }
-      : {
-          additional_instructions:
-            "List files in the root folder to detect facts about the project. Once you have a list of facts, confirm if they should be added to the project.",
-        }
+    const body = {
+      additional_messages: [
+        {
+          role: "user",
+          content,
+        },
+      ],
+    }
 
     if (model !== "assistant") {
       body.model = model
@@ -297,7 +290,7 @@ await fetchMessages(project.value.threadId)
 await fetchRuns()
 
 const handleSendMessage = async (content) => {
-  await sendMessage(project.value, activeModel.value, content)
+  await sendMessage(project.value, content, activeModel.value)
 }
 
 watch(
@@ -343,10 +336,6 @@ onMounted(async () => {
   if (modelValue) {
     const model = JSON.parse(modelValue)
     activeModel.value = model
-  }
-
-  if (messages.value.length === 0) {
-    await sendMessage(project.value, activeModel.value)
   }
 
   scrollMessages()
