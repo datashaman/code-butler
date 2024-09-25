@@ -347,7 +347,7 @@ onMounted(async () => {
     <div class="flex-1 flex flex-col bg-base-100 h-screen">
       <div class="navbar text-neutral z-10">
         <div class="navbar-start">
-          <h2 class="font-bold text-xl pl-8">{{ project.name }}</h2>
+          <h2 class="font-bold text-xl pl-4">{{ project.name }}</h2>
           <ul class="menu menu-xs menu-horizontal px-1 py-0">
             <li>
               <details ref="modelDetails">
@@ -388,7 +388,7 @@ onMounted(async () => {
           </ul>
         </div>
       </div>
-      <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4">
+      <div ref="messagesContainer" class="flex-1 overflow-y-auto pr-4">
         <template v-for="message in messages" :key="message.id">
           <div v-if="message.role === 'assistant'" class="chat chat-start">
             <div class="chat-bubble bg-white text-black">
