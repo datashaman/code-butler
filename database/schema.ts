@@ -6,6 +6,7 @@ export const projects = sqliteTable("projects", {
   name: text("name").notNull().unique().default("New Project"),
   description: text("description").notNull().default(""),
   path: text("path").notNull(),
+  template: text("template"),
   threadId: text("thread_id").notNull(),
   assistantId: text("assistant_id").notNull(),
   facts: text("facts", { mode: "json" }).notNull().default("[]"),
