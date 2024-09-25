@@ -278,7 +278,7 @@ export const useTools = async (project) => {
       function: {
         name: "commitChanges",
         description:
-          "Commit all changes in the project, including deleted files and directories",
+          "Commit all changes in the project, including deleted files and directories. Only commit changes on user request.",
         parameters: {
           type: "object",
           properties: {
@@ -295,14 +295,16 @@ export const useTools = async (project) => {
       type: "function",
       function: {
         name: "undoChanges",
-        description: "Undo the latest change.",
+        description:
+          "Undo the latest change. Only undo changes on user request.",
       },
     },
     pushChanges: {
       type: "function",
       function: {
         name: "pushChanges",
-        description: "Push the changes to the remote repository.",
+        description:
+          "Push the changes to the remote repository. Only push changes on user request.",
       },
     },
     pullChanges: {
