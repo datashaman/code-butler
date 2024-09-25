@@ -43,7 +43,8 @@ const renderMarkdown = (content) => {
 const messages = ref<{ role: string; content: string }[]>([])
 const isLoading = ref(false)
 const error = ref<string | null>(null)
-const activeRun = ref(null)
+const activeRunId = ref(null)
+const runRefs = ref<{ [key: string]: HTMLElement | null }>({})
 
 const messagesContainer = ref<HTMLElement | null>(null)
 
@@ -143,31 +144,21 @@ const sendMessage = async (project, content: string, model: string) => {
       const promises = value
         .trim()
         .split("\n")
-        .map(async (evt) => {
+        .map(async (source) => {
           try {
-            const parsed = JSON.parse(evt)
-            switch (parsed.event) {
+            const evt = JSON.parse(source)
+            // console.log("Received event:", evt)
+
+            switch (evt.data.object) {
               case "thread.message.delta":
-                const delta = parsed.data.delta
-
-                if (assistantContent.value === "...") {
-                  assistantContent.value = ""
-                }
-
-                assistantContent.value += delta.content[0].text.value
-                scrollMessages()
+                handleMessageDeltaEvent(evt, assistantContent)
                 break
-              case "thread.run.created":
-              case "thread.run.queued":
-              case "thread.run.in_progress":
-              case "thread.run.requires_action":
-              case "thread.run.completed":
-              case "thread.run.incomplete":
-              case "thread.run.failed":
-              case "thread.run.cancelling":
-              case "thread.run.cancelled":
-              case "thread.run.expired":
-                await handleRunEvent(parsed)
+              case "thread.run":
+                handleRunEvent(evt)
+                break
+              case "thread.run.step":
+                handleRunStepEvent(evt)
+                break
             }
           } catch (e) {
             console.error("Error parsing event:", e)
@@ -231,6 +222,14 @@ models.value = modelsValue
 
 project.value = await projectStore.fetchProject(props.projectId)
 
+if (typeof project.value.facts === "string") {
+  if (project.value.facts === "") {
+    project.value.facts = []
+  } else {
+    project.value.facts = JSON.parse(project.value.facts)
+  }
+}
+
 const runs = ref([])
 const runsContainer = ref(null)
 
@@ -244,7 +243,20 @@ const fetchRuns = async () => {
   }
 }
 
+const handleMessageDeltaEvent = (evt, assistantContent) => {
+  // console.debug("Received message delta event", evt)
+  const delta = evt.data.delta
+
+  if (assistantContent.value === "...") {
+    assistantContent.value = ""
+  }
+
+  assistantContent.value += delta.content[0].text.value
+  scrollMessages()
+}
+
 const handleRunEvent = async (evt) => {
+  // console.debug("Received run event", evt)
   const index = runs.value.findIndex((run) => run.id == evt.data.id)
 
   if (index !== -1) {
@@ -253,6 +265,17 @@ const handleRunEvent = async (evt) => {
     runs.value = [...runs.value, evt.data]
     scrollRuns()
   }
+}
+
+const handleRunStepEvent = async (evt) => {
+  // console.debug("Received run step event", evt)
+  const step = evt.data
+  const runRef = runRefs[step.run_id]
+  if (!runRef) {
+    console.error("Run ref not found", step.run_id)
+    return
+  }
+  runRef.handleRunStepEvent(evt)
 }
 
 const scrollRuns = () => {
@@ -303,14 +326,8 @@ const newThread = async () => {
   await fetchRuns()
 }
 
-const setActiveRun = async (run) => {
-  const { data } = await $fetch(
-    `/api/projects/${props.projectId}/runs/${run.id}/steps`,
-  )
-
-  // TODO
-
-  activeRun.value = run
+const setActiveRunId = async (runId) => {
+  activeRunId.value = runId
 }
 
 onMounted(async () => {
@@ -401,22 +418,24 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="flex flex-col h-screen w-1/3 pr-6">
+    <div class="flex flex-col h-screen w-1/3 pr-6 pb-4">
       <div class="navbar">
         <div class="navbar-start">
           <h2 class="font-bold text-xl pb-4 pt-3">Runs</h2>
         </div>
       </div>
       <div
-        class="flex-1 flex flex-col gap-2 pl-4 overflow-y-auto"
+        class="flex-1 flex flex-col gap-2 px-2 overflow-y-auto"
         ref="runsContainer"
       >
         <Run
           v-for="run in runs"
           :projectId="projectId"
+          ref="runRefs[run.id]"
           :run="run"
+          :active="activeRunId === run.id"
           :key="run.id"
-          @active-run-set="setActiveRun"
+          @active-run-set="setActiveRunId"
         />
       </div>
     </div>

@@ -316,7 +316,8 @@ export const useTools = async (project) => {
       type: "function",
       function: {
         name: "showDiff",
-        description: "Show the differences between the working directory and the index.",
+        description:
+          "Show the differences between the working directory and the index.",
       },
     },
     saveFile: {
@@ -430,16 +431,6 @@ export const useTools = async (project) => {
     console.log("Handling tool call:", toolCall)
     const args = JSON.parse(toolCall.function.arguments)
     const response = await runTool(toolCall.function.name, args)
-
-    const attributes = {
-      projectId: project.id,
-      assistantId: project.assistantId,
-      tool: toolCall.function.name,
-      args,
-      response,
-    }
-
-    useDB().insert(tables.actions).values(attributes).execute()
 
     return response
   }

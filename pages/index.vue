@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <h2></h2>
+  <div class="p-5">
     <p>Select an existing project or create a new one.</p>
   </div>
 </template>
