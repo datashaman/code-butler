@@ -216,14 +216,15 @@ export const useTools = async (project) => {
       type: "function",
       function: {
         name: "getProjectFacts",
-        description: "Get the facts of the project",
+        description: "Get the facts about the project",
       },
     },
     setProjectFacts: {
       type: "function",
       function: {
         name: "setProjectFacts",
-        description: "Set the facts of the project",
+        description:
+          "Set the facts about the project. Only set facts that appear relevant to the project. If unsure, ask the user.",
         parameters: {
           type: "object",
           properties: {
@@ -243,7 +244,8 @@ export const useTools = async (project) => {
       type: "function",
       function: {
         name: "addProjectFact",
-        description: "Add a fact to the project",
+        description:
+          "Add a fact about the project. Only add facts that appear relevant to the project. If unsure, ask the user.",
         parameters: {
           type: "object",
           properties: {
@@ -260,7 +262,7 @@ export const useTools = async (project) => {
       type: "function",
       function: {
         name: "removeProjectFact",
-        description: "Remove a fact from the project",
+        description: "Remove a fact about the project",
         parameters: {
           type: "object",
           properties: {
