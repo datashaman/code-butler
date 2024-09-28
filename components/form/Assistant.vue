@@ -10,31 +10,11 @@ const snackbar = useSnackbar()
 
 const assistantStore = useAssistantStore()
 
-// TODO make this dynamic
-const availableTools = [
-  "getCurrentTime",
-  "saveFile",
-  "listFiles",
-  "moveFile",
-  "removeFile",
-  "getFileContents",
-  "commitChanges",
-  "undoChanges",
-  "getProjectFacts",
-  "setProjectFacts",
-  "addProjectFact",
-  "removeProjectFact",
-  "pushChanges",
-  "pullChanges",
-  "showDiff",
-]
-
 const model = ref("")
 const name = ref("")
 const description = ref("")
 const instructions = ref("")
 const temperature = ref(1)
-const tools = ref(availableTools)
 
 const errors = ref({})
 
@@ -50,7 +30,6 @@ if (props.assistantId) {
   description.value = assistant.description
   instructions.value = assistant.instructions
   temperature.value = assistant.temperature
-  tools.value = assistant.tools.map((tool) => tool.function.name)
 }
 
 const makeAssistant = () => ({
@@ -59,7 +38,6 @@ const makeAssistant = () => ({
   description: description.value,
   instructions: instructions.value,
   temperature: temperature.value,
-  tools: tools.value,
 })
 
 const handleValidationError = (e) => {
@@ -193,16 +171,6 @@ const deleteAssistant = async () => {
         <div v-if="errors.temperature" class="label">
           <div class="label-text-alt text-error">{{ errors.temperature }}</div>
         </div>
-      </div>
-      <div class="form-control">
-        <div class="label">
-          <span class="label-text">Tools</span>
-        </div>
-        <select class="select select-bordered w-full" multiple v-model="tools">
-          <option v-for="tool in availableTools" :value="tool" :key="tool">
-            {{ tool }}
-          </option>
-        </select>
       </div>
       <div class="form-control w-full">
         <div class="label">

@@ -59,8 +59,6 @@ export default defineEventHandler(async (event) => {
       "\n\nUse the above information to help interpret the audio and provide a transcription.",
   }
 
-  console.log(params)
-
   const transcription = await openai.audio.transcriptions.create(params)
 
   return {

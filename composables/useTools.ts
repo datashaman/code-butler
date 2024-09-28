@@ -195,30 +195,33 @@ export const useTools = async (project) => {
         }
       })
     },
-    undoChanges: async () => {
+    revertCommit: async () => {
       return safelyRun(async () => {
-        await git.revert("HEAD")
+        const result = await git.revert("HEAD")
 
         return {
           success: true,
+          result,
         }
       })
     },
     pushChanges: async () => {
       return safelyRun(async () => {
-        await git.push()
+        const result = await git.push()
 
         return {
           success: true,
+          result,
         }
       })
     },
     pullChanges: async () => {
       return safelyRun(async () => {
-        await git.pull()
+        const result = await git.pull()
 
         return {
           success: true,
+          result,
         }
       })
     },
@@ -249,6 +252,15 @@ export const useTools = async (project) => {
         return {
           success: true,
           branch: branchSummary.current,
+        }
+      })
+    },
+    checkoutBranch: async ({ name }) => {
+      return safelyRun(async () => {
+        await git.checkout(name)
+
+        return {
+          success: true,
         }
       })
     },
@@ -393,12 +405,12 @@ export const useTools = async (project) => {
         },
       },
     },
-    undoChanges: {
+    revertCommit: {
       type: "function",
       function: {
-        name: "undoChanges",
+        name: "revertCommit",
         description:
-          "Undo the latest change. Only undo changes on user request.",
+          "Revert the last commit. Only revert commits on user request.",
       },
     },
     pushChanges: {
@@ -429,6 +441,24 @@ export const useTools = async (project) => {
       function: {
         name: "showStatus",
         description: "Show the status of the working directory.",
+      },
+    },
+    checkoutBranch: {
+      type: "function",
+      function: {
+        name: "checkoutBranch",
+        description: "Switch to a different branch in the project",
+        parameters: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description: "The name of the branch to switch to",
+            },
+          },
+          required: ["name"],
+          additionalProperties: false,
+        },
       },
     },
     getCurrentBranch: {
