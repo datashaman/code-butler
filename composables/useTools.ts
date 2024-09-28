@@ -1,11 +1,13 @@
 import { promises as fs } from "fs"
 import { join } from "path"
 import { simpleGit, SimpleGit } from "simple-git"
+import { Octokit } from "@octokit/rest"
 
 const safelyRun = async (fn) => {
   try {
     return await fn()
   } catch (e) {
+    console.error(e)
     return {
       success: false,
       error: e.message,
@@ -21,9 +23,36 @@ const getFile = ({ path }) => {
   return file
 }
 
+const parseHttpUrl = (url) => {
+  const urlObj = new URL(remote.refs.fetch)
+  const pathParts = urlObj.pathname.split("/")
+  const owner = pathParts[1]
+  const repo = pathParts[2].replace(".git", "")
+
+  return {
+    owner,
+    repo,
+  }
+}
+
+const parseSshUrl = (url) => {
+  const pathParts = url.split(":")[1].split("/")
+  const owner = pathParts[0]
+  const repo = pathParts[1].replace(".git", "")
+
+  return {
+    owner,
+    repo,
+  }
+}
+
 export const useTools = async (project) => {
   const git: SimpleGit = simpleGit({
     baseDir: project.path,
+  })
+
+  const octokit = new Octokit({
+    auth: process.env.GITHUB_TOKEN,
   })
 
   const normalizePath = (path) => {
@@ -156,10 +185,10 @@ export const useTools = async (project) => {
         }
       })
     },
-    commitChanges: async ({ message }) => {
+    commitChanges: async ({ title, body }) => {
       return safelyRun(async () => {
         await git.add(".")
-        await git.commit(message)
+        await git.commit(`${title}\n\n${body}`)
 
         return {
           success: true,
@@ -200,6 +229,71 @@ export const useTools = async (project) => {
         return {
           success: true,
           diff,
+        }
+      })
+    },
+    showStatus: async () => {
+      return safelyRun(async () => {
+        const status = await git.status()
+
+        return {
+          success: true,
+          status,
+        }
+      })
+    },
+    getCurrentBranch: async () => {
+      return safelyRun(async () => {
+        const branchSummary = await git.branch()
+
+        return {
+          success: true,
+          branch: branchSummary.current,
+        }
+      })
+    },
+    createBranch: async ({ name }) => {
+      return safelyRun(async () => {
+        await git.checkoutLocalBranch(name)
+
+        return {
+          success: true,
+        }
+      })
+    },
+    createPullRequest: async ({ title, body }) => {
+      return safelyRun(async () => {
+        const branchSummary = await git.branch()
+
+        const remotes = await git.getRemotes(true)
+        const remote = remotes.find((remote) => remote.name === "origin")
+        console.log(remote)
+
+        if (!remote) {
+          return {
+            success: false,
+            error: "No remote 'origin' found",
+          }
+        }
+
+        const { owner, repo } = remote.refs.fetch.startsWith("https://")
+          ? parseHttpUrl(remote.refs.fetch)
+          : parseSshUrl(remote.refs.fetch)
+
+        const params = {
+          owner,
+          repo,
+          title,
+          body,
+          head: branchSummary.current,
+          base: "main",
+        }
+
+        const { data } = await octokit.pulls.create(params)
+
+        return {
+          success: true,
+          url: data.html_url,
         }
       })
     },
@@ -284,11 +378,17 @@ export const useTools = async (project) => {
         parameters: {
           type: "object",
           properties: {
-            message: {
+            title: {
               type: "string",
+              description: "The title of the commit message",
+            },
+            body: {
+              type: "string",
+              description:
+                "The body of the commit message, describing the changes. Use GitHub markdown for formatting.",
             },
           },
-          required: ["message"],
+          required: ["title", "body"],
           additionalProperties: false,
         },
       },
@@ -322,6 +422,61 @@ export const useTools = async (project) => {
         name: "showDiff",
         description:
           "Show the differences between the working directory and the index.",
+      },
+    },
+    showStatus: {
+      type: "function",
+      function: {
+        name: "showStatus",
+        description: "Show the status of the working directory.",
+      },
+    },
+    getCurrentBranch: {
+      type: "function",
+      function: {
+        name: "getCurrentBranch",
+        description: "Get the name of the current branch",
+      },
+    },
+    createBranch: {
+      type: "function",
+      function: {
+        name: "createBranch",
+        description: "Create a new branch in the project",
+        parameters: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description: "The name of the new branch",
+            },
+          },
+          required: ["name"],
+          additionalProperties: false,
+        },
+      },
+    },
+    createPullRequest: {
+      type: "function",
+      function: {
+        name: "createPullRequest",
+        description: "Create a pull request for the current branch",
+        parameters: {
+          type: "object",
+          properties: {
+            title: {
+              type: "string",
+              description: "The title of the pull request",
+            },
+            body: {
+              type: "string",
+              description:
+                "The body of the pull request, describing the changes. Use GitHub markdown for formatting.",
+            },
+          },
+          required: ["title", "body"],
+          additionalProperties: false,
+        },
       },
     },
     saveFile: {
