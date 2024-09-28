@@ -13,6 +13,7 @@ const projectStore = useProjectStore()
 
 const name = ref("")
 const path = ref("")
+const template = ref("")
 const assistantId = ref("")
 const description = ref("")
 const facts = ref([])
@@ -42,6 +43,7 @@ if (props.projectId) {
 
   name.value = project.name
   path.value = project.path
+  template.value = project.template
   assistantId.value = project.assistantId
   description.value = project.description
   facts.value = project.facts
@@ -50,6 +52,7 @@ if (props.projectId) {
 const makeProject = () => ({
   name: name.value,
   path: path.value,
+  template: template.value,
   assistantId: assistantId.value,
   description: description.value,
   facts: facts.value,
@@ -128,6 +131,16 @@ const deleteProject = async () => {
           <input type="text" class="input input-bordered" v-model="path" />
           <div v-if="errors.path" class="label">
             <div class="label-text-alt text-error">{{ errors.path }}</div>
+          </div>
+        </div>
+
+        <div class="form-control w-full">
+          <div class="label">
+            <div class="label-text">Template Repository</div>
+          </div>
+          <input type="text" class="input input-bordered" v-model="template" />
+          <div v-if="errors.path" class="label">
+            <div class="label-text-alt text-error">{{ errors.template }}</div>
           </div>
         </div>
 
